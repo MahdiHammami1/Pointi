@@ -1,0 +1,111 @@
+package com.example.demo.controllers;
+
+import com.example.demo.dto.LoginUserDTO;
+import com.example.demo.dto.RegisterUserDTO;
+import com.example.demo.dto.VerifyUserDTO;
+import com.example.demo.entities.User;
+import com.example.demo.repositories.UserRepository;
+import com.example.demo.responses.LoginResponse;
+import com.example.demo.responses.SignupResponse;
+import com.example.demo.services.UserService;
+import com.example.demo.services.AuthenticationService;
+import com.example.demo.services.JwtService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/auth")
+@CrossOrigin(origins = "*")
+public class AuthenticationController {
+    private final UserService userService;
+    private final JwtService jwtService;
+    private final AuthenticationService authenticationService;
+
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserRepository userRepository) {
+        this.jwtService = jwtService;
+        this.authenticationService = authenticationService;
+        this.userService = new UserService(userRepository);
+        this.passwordEncoder = new BCryptPasswordEncoder();
+        this.userRepository = userRepository;
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<SignupResponse> register(@RequestBody RegisterUserDTO registerUserDto) {
+        try {
+            SignupResponse response = authenticationService.signup(registerUserDto);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                    .body(new SignupResponse(e.getMessage(), null, null, false));
+        }
+    }
+
+
+    @GetMapping
+    public String getAuthentication() {
+        return "hello " ;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDTO loginUserDto) {
+        // Find user by email
+        Optional<User> optionalUser = userService.findByEmail(loginUserDto.getEmail());
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new LoginResponse("User not found",10000 , null));
+        }
+
+        User user = optionalUser.get();
+
+        // Verify password with encoded version
+        if (!passwordEncoder.matches(loginUserDto.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new LoginResponse("Incorrect password", 1000, null));
+        }
+
+        // Check if account is enabled (if you have email verification)
+
+
+        // Generate JWT token
+        String jwtToken = jwtService.generateToken(user);
+
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(jwtToken);
+        loginResponse.getToken() ;
+        loginResponse.setExpiresIn(jwtService.getExpirationTime());
+        loginResponse.setMessage("Login successful");
+
+
+        return ResponseEntity.ok(loginResponse);
+    }
+
+
+    @PostMapping("/verify")
+    public ResponseEntity<String> verifyUser(@RequestBody VerifyUserDTO verifyUserDto) {
+        try {
+            authenticationService.verifyUser(verifyUserDto);
+            return ResponseEntity.ok("Account verified successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/resend-verification")
+    public ResponseEntity<String> resendVerificationCode(@RequestParam String email) {
+        try {
+            authenticationService.resendVerificationCode(email);
+            return ResponseEntity.ok("Verification code sent successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+}
