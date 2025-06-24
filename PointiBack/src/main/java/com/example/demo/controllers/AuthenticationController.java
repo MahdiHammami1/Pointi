@@ -49,10 +49,7 @@ public class AuthenticationController {
     }
 
 
-    @GetMapping
-    public String getAuthentication() {
-        return "hello " ;
-    }
+
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDTO loginUserDto) {
