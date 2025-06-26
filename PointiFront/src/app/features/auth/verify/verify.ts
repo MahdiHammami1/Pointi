@@ -27,15 +27,15 @@ export class Verify{
       this.errorMessage.set('Please enter a valid 6-digit code');
       return;
     }
-
+    console.log(localStorage.getItem('emailToVerify'));
     this.isLoading.set(true);
     this.errorMessage.set('');
     this.successMessage.set('');
 
     this.http.post('http://localhost:8080/auth/verify', {
       email: localStorage.getItem('emailToVerify'),
-      code: this.verificationCode
-    }, { responseType: 'text' }).subscribe({
+      verificationCode: this.verificationCode
+      }, { responseType: 'text' }).subscribe({
       next: (response) => {
         this.successMessage.set(response);
         setTimeout(() => {

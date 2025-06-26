@@ -1,7 +1,0 @@
-export interface RegisterResponse {
-  email: string | null;
-  message: string;
-  emailSent: boolean;
-  username: string | null;
-
-}

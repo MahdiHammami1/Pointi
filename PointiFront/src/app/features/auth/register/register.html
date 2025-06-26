@@ -1,102 +1,98 @@
-<div class="container mt-5">
-  <h2>Register</h2>
-  <form (ngSubmit)="onSubmit()">
-    <!-- First Name -->
-    <div class="mb-3">
-      <label for="firstName" class="form-label">First Name</label>
-      <input
-        type="text"
-        class="form-control"
-        id="firstName"
-        [(ngModel)]="firstName"
-        name="firstName"
-        placeholder="First Name"
-        required
-      />
-    </div>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow p-4" style="width: 100%; max-width: 500px;">
+    <h2 class="text-center border-bottom pb-2">Join Now!</h2>
+    <form (ngSubmit)="onSubmit()">
+      <!-- First Name -->
+      <div class="mb-3">
+        <label for="firstName" class="form-label">First Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="firstName"
+          [(ngModel)]="firstName"
+          name="firstName"
+          required
+        />
+      </div>
 
-    <!-- Last Name -->
-    <div class="mb-3">
-      <label for="lastName" class="form-label">Last Name</label>
-      <input
-        type="text"
-        class="form-control"
-        id="lastName"
-        [(ngModel)]="lastName"
-        name="lastName"
-        placeholder="Last Name"
-        required
-      />
-    </div>
+      <!-- Last Name -->
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="lastName"
+          [(ngModel)]="lastName"
+          name="lastName"
+          required
+        />
+      </div>
 
-    <!-- Username -->
-    <div class="mb-3">
-      <label for="username" class="form-label">Username</label>
-      <input
-        type="text"
-        class="form-control"
-        id="username"
-        [(ngModel)]="username"
-        name="username"
-        placeholder="Username"
-        required
-      />
-    </div>
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          [(ngModel)]="username"
+          name="username"
+          required
+        />
+      </div>
 
-    <!-- Phone Number -->
-    <div class="mb-3">
-      <label for="phoneNumber" class="form-label">Phone Number</label>
-      <input
-        type="tel"
-        class="form-control"
-        id="phoneNumber"
-        [(ngModel)]="phoneNumber"
-        name="phoneNumber"
-        placeholder="Phone Number"
-      />
-    </div>
+      <!-- Phone Number -->
+      <div class="mb-3">
+        <label for="phoneNumber" class="form-label">Phone Number</label>
+        <input
+          type="tel"
+          class="form-control"
+          id="phoneNumber"
+          [(ngModel)]="phoneNumber"
+          name="phoneNumber"
+        />
+      </div>
 
-    <!-- Date of Birth -->
-    <div class="mb-3">
-      <label for="dateOfBirth" class="form-label">Date of Birth</label>
-      <input
-        type="date"
-        class="form-control"
-        id="dateOfBirth"
-        [(ngModel)]="dateOfBirth"
-        name="dateOfBirth"
-      />
-    </div>
+      <!-- Date of Birth -->
+      <div class="mb-3">
+        <label for="dateOfBirth" class="form-label">Date of Birth</label>
+        <input
+          type="date"
+          class="form-control"
+          id="dateOfBirth"
+          [(ngModel)]="dateOfBirth"
+          name="dateOfBirth"
+        />
+      </div>
 
-    <!-- Email -->
-    <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
-      <input
-        type="email"
-        class="form-control"
-        id="email"
-        [(ngModel)]="email"
-        name="email"
-        placeholder="Email"
-        required
-      />
-    </div>
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          [(ngModel)]="email"
+          name="email"
+          required
+        />
+      </div>
 
-    <!-- Password -->
-    <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-      <input
-        type="password"
-        class="form-control"
-        id="password"
-        [(ngModel)]="password"
-        name="password"
-        placeholder="Password"
-        required
-      />
-    </div>
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          required
+        />
+      </div>
 
-    <!-- Submit Button -->
-    <button type="submit" class="btn btn-primary">Register</button>
-  </form>
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary w-100">Register</button>
+    </form>
+  </div>
 </div>

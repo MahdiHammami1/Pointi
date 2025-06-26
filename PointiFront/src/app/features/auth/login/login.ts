@@ -4,16 +4,23 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  selector: 'app-login',
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, MatSnackBarModule],
   templateUrl: './login.html',
+  styleUrls: ['./login.css']
 })
 export class Login {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private snackBar: MatSnackBar
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -28,24 +35,32 @@ export class Login {
         password: this.loginForm.value.password
       };
 
-      this.http.post('http://localhost:8080/auth/login', loginData)
+      this.http.post<any>('http://localhost:8080/auth/login', loginData)
         .pipe(
           catchError(error => {
-            console.error('Login failed:', error);
-            return of(null); // Or handle with a notification service
+            console.error( error);
+            this.showMessage(' Invalid email or password', 'error');
+            return of(null);
           })
         )
         .subscribe(response => {
           if (response) {
             console.log('Login successful:', response);
-            // e.g., localStorage.setItem('token', response.token);
-            // this.router.navigate(['/dashboard']); // if using routing
+            this.showMessage('Login successful', 'success');
+            // Example: localStorage.setItem('token', response.token);
+            // Example: this.router.navigate(['/dashboard']);
           }
         });
     } else {
-      console.log('Form is invalid');
+      this.showMessage('Please fill out the form correctly.', 'error');
     }
   }
 
-  
+  private showMessage(message: string, type: 'success' | 'error') {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar',
+      verticalPosition: 'top'
+    });
+  }
 }

@@ -5,6 +5,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar'; 
+
 
 
 interface RegisterResponse {
@@ -17,8 +19,9 @@ interface RegisterResponse {
 @Component({
   standalone: true,
   selector: 'app-register',
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule,],
   templateUrl: './register.html',
+  styleUrls: ['./register.css']
 })
 
 export class Register {
@@ -30,10 +33,16 @@ export class Register {
   email = '';
   password = '';
   
+  message = '';
+  isError = false;
+  isLoading = false;
+
+
 
   constructor(
     private http: HttpClient,
      private router: Router,
+     private snackBar: MatSnackBar 
   ) {}
 
   onSubmit() {
@@ -51,7 +60,7 @@ export class Register {
     .pipe(
       catchError(error => {
         console.error('Registration failed:', error);
-        // Retourne un objet simulant une erreur avec message
+        this.showMessage(error.error?.message || 'Registration failed!', 'error');
         return of({ emailSent: false, message: 'An unexpected error occurred.', email: null, username: null });
       })
     )
@@ -62,9 +71,18 @@ export class Register {
         if (response.emailSent) {
           localStorage.setItem('emailToVerify', response.email || '');
          this.router.navigate(['/auth/verify']);
-        }
-        // Pas besoin d’un else ici, on affiche déjà le message quoi qu’il arrive
+        }else {
+            this.showMessage(response.message, 'error');
+          }
       }
     });
-}
+ }
+
+ private showMessage(message: string, type: 'success' | 'error') {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000, // Auto-close after 5 seconds
+      panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar',
+      verticalPosition: 'top' // Show at top of screen
+    });
+  }
 }
