@@ -8,7 +8,7 @@
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "src/app/shared/models/register-response.model"  ],
   "exclude": [
     "src/**/*.spec.ts"
   ]
