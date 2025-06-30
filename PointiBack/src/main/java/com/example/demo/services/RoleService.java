@@ -1,18 +1,23 @@
 package com.example.demo.services;
 
+import com.example.demo.entities.Permission;
 import com.example.demo.entities.Role;
+import com.example.demo.repositories.PermissionRepository;
 import com.example.demo.repositories.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class RoleService {
-    @Autowired
-    private RoleRepository roleRepository;
+
+    private final RoleRepository roleRepository;
+    private final PermissionRepository permissionRepository;
+
+    public RoleService(RoleRepository roleRepository, PermissionRepository permissionRepository) {
+        this.roleRepository = roleRepository;
+        this.permissionRepository = permissionRepository;
+    }
 
     public Role createRole(Role role) {
         return roleRepository.save(role);
@@ -29,12 +34,62 @@ public class RoleService {
     public Role updateRole(UUID id, Role updatedRole) {
         return roleRepository.findById(id).map(role -> {
             role.setNom(updatedRole.getNom());
-            role.setPermission(updatedRole.getPermission());
+            role.setPermissions(updatedRole.getPermissions());
             return roleRepository.save(role);
         }).orElse(null);
     }
 
     public void deleteRole(UUID id) {
         roleRepository.deleteById(id);
+    }
+
+    // ✅ Add permission by ID
+    public Role addPermissionToRole(UUID roleId, UUID permissionId) {
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        Permission permission = permissionRepository.findById(permissionId)
+                .orElseThrow(() -> new RuntimeException("Permission not found"));
+
+        role.getPermissions().add(permission);
+        return roleRepository.save(role);
+    }
+
+    // ✅ Add permission by name
+    public Role addPermissionToRoleByName(UUID roleId, String permissionName) {
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        Permission permission = permissionRepository.findByNom(permissionName)
+                .orElseThrow(() -> new RuntimeException("Permission not found"));
+
+        role.getPermissions().add(permission);
+        return roleRepository.save(role);
+    }
+
+    // ✅ Remove permission by name
+    public Role removePermissionFromRoleByName(UUID roleId, String permissionName) {
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        Permission permission = permissionRepository.findByNom(permissionName)
+                .orElseThrow(() -> new RuntimeException("Permission not found"));
+
+        boolean removed = role.getPermissions().remove(permission);
+        if (!removed) {
+            throw new RuntimeException("Permission not associated with this role.");
+        }
+
+        return roleRepository.save(role);
+    }
+
+    // ✅ Remove permission by ID
+    public Role removePermissionFromRole(UUID roleId, UUID permissionId) {
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        Permission permission = permissionRepository.findById(permissionId)
+                .orElseThrow(() -> new RuntimeException("Permission not found"));
+
+        role.getPermissions().remove(permission);
+        return roleRepository.save(role);
     }
 }

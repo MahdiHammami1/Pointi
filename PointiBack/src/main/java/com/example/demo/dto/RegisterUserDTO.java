@@ -17,6 +17,4 @@ public class RegisterUserDTO {
     private String phoneNumber ;
     private LocalDate dateOfBirth;
 
-
-
 }

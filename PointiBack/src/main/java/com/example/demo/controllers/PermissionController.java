@@ -19,7 +19,7 @@ public class PermissionController {
 
 
 
-    @PostMapping("/add")
+    @PostMapping("")
     public Permission createPermission(@RequestBody Permission permission) {
         return permissionService.createPermission(permission);
     }
@@ -43,4 +43,6 @@ public class PermissionController {
     public void deletePermission(@PathVariable UUID id) {
         permissionService.deletePermission(id);
     }
+
+
 }

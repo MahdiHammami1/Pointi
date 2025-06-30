@@ -49,8 +49,14 @@ public class User implements UserDetails {
     private boolean enabled;
     private boolean verified;
 
-    @OneToOne
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    private LocalDateTime modifiedAt;
+
+    @ManyToOne
     @JoinColumn(name = "role_id")
+
     private Role role;
 
     // === Implémentation des méthodes UserDetails ===
@@ -84,5 +90,16 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.modifiedAt = LocalDateTime.now();
     }
 }

@@ -7,6 +7,7 @@ import com.example.demo.entities.User;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.responses.LoginResponse;
 import com.example.demo.responses.SignupResponse;
+import com.example.demo.services.RoleService;
 import com.example.demo.services.UserService;
 import com.example.demo.services.AuthenticationService;
 import com.example.demo.services.JwtService;
@@ -16,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -23,16 +26,20 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class AuthenticationController {
     private final UserService userService;
+    private final RoleService roleService;
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserRepository userRepository) {
+
+
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserRepository userRepository,RoleService roleService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
         this.userService = new UserService(userRepository);
+        this.roleService = roleService;
         this.passwordEncoder = new BCryptPasswordEncoder();
         this.userRepository = userRepository;
     }
@@ -69,7 +76,9 @@ public class AuthenticationController {
                     .body(new LoginResponse("Incorrect password", 1000, null));
         }
 
-        // Check if account is enabled (if you have email verification)
+        // ✅ Update last login time
+        user.setLastLogin(LocalDateTime.now());
+        userService.save(user); // Assure-toi que cette méthode fait bien un save dans le repository
 
 
         // Generate JWT token
@@ -105,4 +114,12 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
+
+
+
+
+
+    
 }

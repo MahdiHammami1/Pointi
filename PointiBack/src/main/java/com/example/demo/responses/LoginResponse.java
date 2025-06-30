@@ -8,12 +8,14 @@ public class LoginResponse {
     private long expiresIn;
     private String message;
 
+
     public LoginResponse() {}
 
     public LoginResponse(String token, long expiresIn, String message) {
         this.token = token;
         this.expiresIn = expiresIn;
         this.message = message;
+
     }
 
     // Getters and Setters

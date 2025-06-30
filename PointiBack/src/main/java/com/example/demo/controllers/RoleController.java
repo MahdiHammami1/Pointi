@@ -15,7 +15,7 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
-    @PostMapping("/add")
+    @PostMapping("")
     public Role createRole(@RequestBody Role role) {
         return roleService.createRole(role);
     }
@@ -40,4 +40,31 @@ public class RoleController {
         roleService.deleteRole(id);
     }
 
+    @PutMapping("/{roleId}/add-permission/{permissionId}")
+    public Role addPermissionToRole(
+            @PathVariable UUID roleId,
+            @PathVariable UUID permissionId) {
+        return roleService.addPermissionToRole(roleId, permissionId);
+    }
+
+    @PutMapping("/{roleId}/add-permission-name/{permissionName}")
+    public Role addPermissionToRoleByName(
+            @PathVariable UUID roleId,
+            @PathVariable String permissionName) {
+        return roleService.addPermissionToRoleByName(roleId, permissionName);
+    }
+
+    @PutMapping("/{roleId}/remove-permission/{permissionId}")
+    public Role removePermissionFromRole(
+            @PathVariable UUID roleId,
+            @PathVariable UUID permissionId) {
+        return roleService.removePermissionFromRole(roleId, permissionId);
+    }
+
+    @PutMapping("/{roleId}/remove-permission-name/{permissionName}")
+    public Role removePermissionFromRoleByName(
+            @PathVariable UUID roleId,
+            @PathVariable String permissionName) {
+        return roleService.removePermissionFromRoleByName(roleId, permissionName);
+    }
 }

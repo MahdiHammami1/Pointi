@@ -1,10 +1,14 @@
 package com.example.demo.controllers;
 
+import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
 import com.example.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,4 +43,38 @@ public class UserController {
     public void deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);
     }
+
+    @DeleteMapping("/all")
+    public void deleteAllUsers() {
+        userService.deleteAllUsers();
+    }
+
+    @PutMapping("/set-role")
+    public User setRoleToUser(@RequestParam UUID userId, @RequestParam UUID roleId) {
+        return userService.setRoleToUser(userId, roleId);
+    }
+
+
+    @PutMapping("/{userId}/modify-role/{roleId}")
+    public User modifyRoleOfUser(@PathVariable UUID userId, @PathVariable UUID roleId) {
+        return userService.modifyRoleOfUser(userId, roleId);
+    }
+
+    @DeleteMapping("/role")
+    public ResponseEntity<User> deleteUserRole(
+            @RequestParam UUID userId,
+            @RequestParam UUID roleId) {
+
+        User updatedUser = userService.deleteRoleOfUser(userId, roleId);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @GetMapping("/me")
+    public User getLoggedUser(Authentication authentication) {
+        User user = (User) authentication.getPrincipal(); // your custom User class
+        return user; // or user.getId(), etc.
+    }
+
+
+
 }
