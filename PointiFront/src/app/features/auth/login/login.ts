@@ -5,6 +5,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -19,12 +20,14 @@ export class Login {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+     private router: Router
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      rememberMe: [false]
+      rememberMe: [false],
+      
     });
   }
 
@@ -46,7 +49,9 @@ export class Login {
         .subscribe(response => {
           if (response) {
             console.log('Login successful:', response);
+            this.router.navigateByUrl('/loggedin');
             this.showMessage('Login successful', 'success');
+            localStorage.setItem('token', response.token); // ⬅️ Store token
             // Example: localStorage.setItem('token', response.token);
             // Example: this.router.navigate(['/dashboard']);
           }

@@ -1,0 +1,58 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-content">
+      <!-- Brand -->
+      <a href="#" class="navbar-brand">Pointi</a>
+
+      <!-- Desktop Navigation - Left Aligned -->
+      <div class="navbar-nav-desktop">
+        <a href="#" class="nav-link active">
+          Home
+          <span class="nav-underline"></span>
+        </a>
+        <a href="#" class="nav-link">
+          Features
+          <span class="nav-underline"></span>
+        </a>
+        <a href="#" class="nav-link">
+          Pricing
+          <span class="nav-underline"></span>
+        </a>
+        
+        <!-- Desktop Dropdown -->
+        <div class="dropdown" (click)="toggleDropdown()" [class.active]="isDropdownOpen">
+          <button class="dropdown-toggle nav-link">
+            Dropdown link
+            <svg class="dropdown-icon" [class.rotated]="isDropdownOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6,9 12,15 18,9"></polyline>
+            </svg>
+            <span class="nav-underline"></span>
+          </button>
+          <div class="dropdown-menu" [class.show]="isDropdownOpen">
+            <a href="#" class="dropdown-item">Action</a>
+            <a href="#" class="dropdown-item">Another action</a>
+            <a href="#" class="dropdown-item">Something else here</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right side - CTA Button -->
+      <button class="btn btn-outline-danger rounded-pill px-4" >
+        <i class="bi bi-box-arrow-right me-2"></i>Log out
+      </button>
+
+      <!-- Mobile Menu Button -->
+      <button class="mobile-toggle" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+        <span class="hamburger-line" [class.active]="isMobileMenuOpen"></span>
+        <span class="hamburger-line" [class.active]="isMobileMenuOpen"></span>
+        <span class="hamburger-line" [class.active]="isMobileMenuOpen"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-overlay" [class.show]="isMobileMenuOpen" (click)="closeMobileMenu()"></div>
+
+  <!-- Mobile Menu -->
+  
+</nav>

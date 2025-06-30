@@ -6,7 +6,7 @@ import { Verify } from './verify/verify';
 
 
 export const AUTH_ROUTES: Routes = [
-  { path: 'login', component: Login },
+  { path: '', component: Login },
   { path: 'register', component: Register },
   { path: 'verify', component: Verify },
 ];

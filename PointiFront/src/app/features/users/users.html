@@ -1,0 +1,83 @@
+<div class="users-container">
+  <div class="header">
+    <h1>Users Management</h1>
+    <button class="btn btn-primary" (click)="createUser()">
+      <span class="btn-icon">+</span>
+      Create User
+    </button>
+  </div>
+
+  <div class="search-section">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        placeholder="Search users by name, email, or phone..."
+        class="search-input"
+      />
+      <span class="search-icon">🔍</span>
+    </div>
+  </div>
+
+  <div class="error-message" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    Loading users...
+  </div>
+
+  <div class="table-container" *ngIf="!loading">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Date of Birth</th>
+          <th>Last Login</th>
+          <th>Created At</th>
+          <th>Modified At</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of filteredUsers; trackBy: trackByUserId" class="user-row">
+          <td class="user-name">
+            <div class="name-container">
+              <div class="avatar">{{ user.firstName.charAt(0) }}{{ user.lastName.charAt(0) }}</div>
+              <div>
+                <div class="full-name">{{ user.firstName }} {{ user.lastName }}</div>
+              </div>
+            </div>
+          </td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.phoneNumber || 'N/A' }}</td>
+          <td>{{ formatDate(user.dateOfBirth) }}</td>
+          <td>{{ formatDateTime(user.lastLogin) }}</td>
+          <td>{{ formatDateTime(user.createdAt) }}</td>
+          <td>{{ formatDateTime(user.modifiedAt) }}</td>
+          <td class="actions">
+            <button class="btn btn-secondary btn-sm" (click)="editUser(user)" title="Edit User">
+              ✏️
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="deleteUser(user)" title="Delete User">
+              🗑️
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="no-results" *ngIf="filteredUsers.length === 0 && !loading">
+      <p>No users found matching your search criteria.</p>
+    </div>
+  </div>
+
+  <div class="results-count" *ngIf="!loading">
+    Showing {{ filteredUsers.length }} of {{ users.length }} users
+  </div>
+</div>

@@ -70,7 +70,7 @@ export class Register {
 
         if (response.emailSent) {
           localStorage.setItem('emailToVerify', response.email || '');
-         this.router.navigate(['/auth/verify']);
+         this.router.navigate(['/verify']);
         }else {
             this.showMessage(response.message, 'error');
           }

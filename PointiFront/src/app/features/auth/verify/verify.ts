@@ -39,7 +39,7 @@ export class Verify{
       next: (response) => {
         this.successMessage.set(response);
         setTimeout(() => {
-          this.router.navigate(['/auth/login']);
+          this.router.navigate(['']);
         }, 2000);
       },
       error: (err) => {
