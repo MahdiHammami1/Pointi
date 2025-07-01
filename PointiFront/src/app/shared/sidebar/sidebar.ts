@@ -63,23 +63,29 @@ export class Sidebar {
       title: 'MAIN',
       items: [
         { icon: 'bi-speedometer2', label: 'Dashboard', badge: 5, badgeColor: 'primary', active: true },
-        { icon: 'bi-bar-chart', label: 'Analytics' },
+        { icon: "bi bi-gear-fill", label: 'Roles'  , route: '/loggedin/roles' },
         { icon: 'bi-people', label: 'Users', badge: 12, badgeColor: 'success', route: '/loggedin/users' },
+        { icon: 'bi-patch-check', label: 'Badges' },
+        { icon: 'bi-person-workspace', label: 'Employees' },
+        { icon: 'bi-person-plus', label: 'Visitors' },
+
+
+
       ]
     },
-    {
+    /*{
       title: 'MANAGEMENT',
       items: [
-        { icon: 'bi-folder', label: 'Projects' },
-        { icon: 'bi-calendar-event', label: 'Calendar' },
-        { icon: 'bi-chat-dots', label: 'Messages', badge: 3, badgeColor: 'warning' },
-        { icon: 'bi-bell', label: 'Notifications' }
+        //{ icon: 'bi-folder', label: 'Projects' },
+        //{ icon: 'bi-calendar-event', label: 'Calendar' },
+        //{ icon: 'bi-chat-dots', label: 'Messages', badge: 3, badgeColor: 'warning' },
+        //{ icon: 'bi-bell', label: 'Notifications' }
       ]
-    },
+    },*/
     {
       title: 'SETTINGS',
       items: [
-        { icon: 'bi-person-circle', label: 'Profile' },
+        { icon: 'bi-person-circle', label: 'Profile', route : '/loggedin/profile' },
         { icon: 'bi-gear', label: 'Settings' },
         { icon: 'bi-question-circle', label: 'Help & Support' }
       ]

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Layout } from './shared/layout/layout';
 import { authGuard } from './features/auth/auth.guard';
+import { RoleComponent } from './features/roles/roles';
 
 export const routes: Routes = [
     {
@@ -24,7 +25,18 @@ export const routes: Routes = [
                 canActivate: [authGuard]
                 
             }
-         
+            ,{
+                path: 'profile',
+                loadChildren: () => import('./features/profile/profile.routes').then(m => m.Profile_ROUTES),
+            },
+            {
+                path: 'roles',
+                loadChildren: () => import('./features/roles/roles.routes').then(m => m.Role_ROUTES),
+            }
+            ,{
+                path: 'permissions',
+                loadChildren: () => import('./features/permissions/permissions.routes').then(m => m.Permission_ROUTES),
+            }
         ]
-    }
+    },
 ];

@@ -11,28 +11,27 @@
           <span class="nav-underline"></span>
         </a>
         <a href="#" class="nav-link">
-          Features
+          Employees
           <span class="nav-underline"></span>
         </a>
         <a href="#" class="nav-link">
-          Pricing
+          Badges
           <span class="nav-underline"></span>
         </a>
         
         <!-- Desktop Dropdown -->
         <div class="dropdown" (click)="toggleDropdown()" [class.active]="isDropdownOpen">
           <button class="dropdown-toggle nav-link">
-            Dropdown link
+            Account
             <svg class="dropdown-icon" [class.rotated]="isDropdownOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="6,9 12,15 18,9"></polyline>
             </svg>
             <span class="nav-underline"></span>
           </button>
           <div class="dropdown-menu" [class.show]="isDropdownOpen">
-            <a href="#" class="dropdown-item">Action</a>
-            <a href="#" class="dropdown-item">Another action</a>
-            <a href="#" class="dropdown-item">Something else here</a>
-          </div>
+            <a href="/loggedin/profile" class="dropdown-item">Profile</a> 
+            <a href="#" class="dropdown-item">Settings</a>
+         </div>
         </div>
       </div>
 

@@ -1,0 +1,154 @@
+<div class="container-fluid py-4">
+  <!-- Header Section -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="permission-header">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <button class="btn btn-back me-3" (click)="goBackToRoles()">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="header-content">
+              <h1 class="header-title mb-1">Permission Management</h1>
+              <p class="header-subtitle mb-0" *ngIf="selectedRole">
+                Managing permissions for: <strong>{{ selectedRole.name }}</strong>
+              </p>
+            </div>
+          </div>
+          <div class="permission-counter" *ngIf="!loading">
+            <span class="counter-text">{{ getSelectedCount() }} / {{ getTotalCount() }}</span>
+            <small class="text-muted d-block">Selected</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 text-muted">Loading permissions...</p>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="fas fa-check-circle me-2"></i>
+    {{ successMessage }}
+    <button type="button" class="btn-close" (click)="successMessage = null"></button>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    {{ error }}
+    <button type="button" class="btn-close" (click)="error = null"></button>
+  </div>
+
+  <!-- Permissions Content -->
+  <div *ngIf="!loading && selectedRole" class="row">
+    <!-- Permissions List -->
+    <div class="col-lg-8">
+      <div class="permissions-container">
+        <div *ngFor="let category of getGroupedPermissions() | keyvalue" class="permission-category">
+          <div class="category-header">
+            <h5 class="category-title">{{ category.key }}</h5>
+            <span class="category-count">{{ category.value.length }} permissions</span>
+          </div>
+          
+          <div class="permission-grid">
+            <div *ngFor="let permission of category.value" class="permission-item">
+              <div class="permission-card" [class.active]="isPermissionSelected(permission.id)">
+                <div class="permission-icon">
+                  <i [class]="getPermissionIcon(permission.nom)"></i>
+                </div>
+                
+                <div class="permission-info">
+                  <h6 class="permission-name">{{ permission.nom }}</h6>
+                  <p class="permission-description">{{ permission.description || 'No description available' }}</p>
+                </div>
+                
+                <div class="permission-toggle">
+                  <div class="form-check form-switch">
+                    <input 
+                      class="form-check-input permission-switch" 
+                      type="checkbox" 
+                      [id]="'permission-' + permission.id"
+                      [checked]="isPermissionSelected(permission.id)"
+                      (change)="togglePermission(permission.id)">
+                    <label class="form-check-label" [for]="'permission-' + permission.id">
+                      <span class="visually-hidden">Toggle {{ permission.nom }}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <div class="sidebar-sticky">
+        <!-- Role Info Card -->
+        <div class="role-info-card">
+          <div class="role-info-header">
+            <div class="role-avatar">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <div>
+              <h6 class="role-name">{{ selectedRole.name }}</h6>
+              <p class="role-desc">{{ selectedRole.description }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Card -->
+        <div class="summary-card">
+          <h6 class="summary-title">Permission Summary</h6>
+          <div class="summary-stats">
+            <div class="stat-row">
+              <span class="stat-label">Total Permissions:</span>
+              <span class="stat-value">{{ getTotalCount() }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Selected:</span>
+              <span class="stat-value text-success">{{ getSelectedCount() }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Unselected:</span>
+              <span class="stat-value text-muted">{{ getTotalCount() - getSelectedCount() }}</span>
+            </div>
+          </div>
+          
+          <div class="progress mt-3">
+            <div 
+              class="progress-bar" 
+              role="progressbar" 
+              [style.width.%]="(getSelectedCount() / getTotalCount()) * 100">
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button 
+            class="btn btn-save"
+            [disabled]="saving"
+            (click)="savePermissions()">
+            <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!saving" class="fas fa-save me-2"></i>
+            {{ saving ? 'Saving...' : 'Save Permissions' }}
+          </button>
+          
+          <button class="btn btn-cancel" (click)="goBackToRoles()">
+            <i class="fas fa-times me-2"></i>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

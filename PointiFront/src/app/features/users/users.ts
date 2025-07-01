@@ -2,12 +2,12 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, forkJoin, lastValueFrom, map, of } from 'rxjs';
 
 interface Role {
-  id: string;
+ 
   nom: string;
-  permissions: string[];
+  
 }
 
 interface User {
@@ -20,7 +20,7 @@ interface User {
   lastLogin: string;
   createdAt: string;
   modifiedAt: string;
-  role: Role; 
+  role?: Role; // Optional role field 
 }
 const headers = new HttpHeaders({
   'Authorization': 'Bearer ' + (localStorage.getItem("token") || '')
@@ -42,28 +42,49 @@ export class Users implements OnInit {
   loading: boolean = false;
   error: string = '';
 
-  ngOnInit() {
+ngOnInit() {
     this.loadUsers();
   }
 
-  loadUsers() {
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': 'Bearer ' + (localStorage.getItem('token') || '')
+    });
+  }
+
+    async loadUsers() {
     this.loading = true;
     this.error = '';
+    const headers = this.getHeaders();
 
-    this.http.get<User[]>('http://localhost:8080/users', { headers })
-      .subscribe({
-        next: (data) => {
-          this.users = data;
-          this.filteredUsers = data;
-          this.loading = false;
-        },
-        error: (err) => {
-          this.error = 'Failed to load users. Please try again.';
-          this.loading = false;
-          console.error('Error loading users:', err);
-        }
-      });
+    try {
+      // Fetch all users (with roles included)
+      const users = await lastValueFrom(
+        this.http.get<User[]>('http://localhost:8080/users', { headers }).pipe(
+          catchError(err => {
+            console.error('Error loading users:', err);
+            throw 'Failed to load users. Please try again.';
+          })
+        )
+      );
+
+      // No need for separate role calls - roles are already included
+      this.users = users;
+      this.filteredUsers = users;
+    } catch (error) {
+      this.error = typeof error === 'string' ? error : 'Failed to load users.';
+      console.error('Error:', error);
+    } finally {
+      this.loading = false;
+    }
   }
+
+  // Helper method to get role name safely
+  getRoleName(user: User): string {
+    return user?.role?.nom || 'No Role';
+  }
+  
+
 
   onSearch() {
     if (!this.searchTerm.trim()) {
@@ -92,21 +113,25 @@ export class Users implements OnInit {
     // You can open a modal or navigate to an edit form
   }
 
-  deleteUser(user: User) {
-    if (confirm(`Are you sure you want to delete ${user.firstName} ${user.lastName}?`)) {
-      this.http.delete(`http://localhost:8080/users/${user.id}`)
-        .subscribe({
-          next: () => {
-            this.loadUsers(); // Reload the list
-          },
-          error: (err) => {
-            this.error = 'Failed to delete user. Please try again.';
-            console.error('Error deleting user:', err);
-          }
-        });
-    }
-  }
+deleteUser(user: User) {
+  if (confirm(`Delete ${user.firstName} ${user.lastName}?`)) {
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + localStorage.getItem('token') // Get token from storage
+    });
 
+    this.http.delete(`http://localhost:8080/users/${user.id}`, { headers })
+      .subscribe({
+        next: () => {
+          alert('User deleted!'); // Simple alert instead of snackbar
+          this.loadUsers(); // Refresh the list
+        },
+        error: (err) => {
+          alert('Delete failed!'); // Simple error alert
+          console.error(err);
+        }
+      });
+  }
+}
   formatDate(dateString: string): string {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString();

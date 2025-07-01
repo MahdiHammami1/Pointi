@@ -1,11 +1,5 @@
 <div class="users-container">
-  <div class="header">
-    <h1>Users Management</h1>
-    <button class="btn btn-primary" (click)="createUser()">
-      <span class="btn-icon">+</span>
-      Create User
-    </button>
-  </div>
+ 
 
   <div class="search-section">
     <div class="search-box">
@@ -60,6 +54,8 @@
           <td>{{ formatDateTime(user.lastLogin) }}</td>
           <td>{{ formatDateTime(user.createdAt) }}</td>
           <td>{{ formatDateTime(user.modifiedAt) }}</td>
+          <td>{{ getRoleName(user) }}</td>
+
           <td class="actions">
             <button class="btn btn-secondary btn-sm" (click)="editUser(user)" title="Edit User">
               ✏️
