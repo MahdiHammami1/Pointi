@@ -1,12 +1,16 @@
 package com.example.demo.controllers;
 
+import com.example.demo.dto.PermissionIdsDTO;
+import com.example.demo.entities.Permission;
 import com.example.demo.entities.Role;
 import com.example.demo.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -67,4 +71,21 @@ public class RoleController {
             @PathVariable String permissionName) {
         return roleService.removePermissionFromRoleByName(roleId, permissionName);
     }
+
+    @GetMapping("/{roleId}/permissions")
+    public ResponseEntity<Set<Permission>> getRolePermissions(@PathVariable UUID roleId) {
+        return roleService.getRolePermissions(roleId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/{roleId}/permissions")
+    public ResponseEntity<Void> addPermissionsToRole(
+            @PathVariable UUID roleId,
+            @RequestBody PermissionIdsDTO request) {
+
+        roleService.addRolePermissions(roleId, request.getPermissionIds());
+        return ResponseEntity.ok().build();
+    }
+
 }

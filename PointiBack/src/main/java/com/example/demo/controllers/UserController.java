@@ -75,6 +75,17 @@ public class UserController {
         return user; // or user.getId(), etc.
     }
 
+    @GetMapping("/getRole/{id}")
+    public ResponseEntity<String> getUserRole(@PathVariable UUID id) {
+        String role = userService.getUsrRole(id);
+        if (role != null) {
+            return ResponseEntity.ok(role);
+        } else {
+            return ResponseEntity.notFound().build(); // 404 si utilisateur non trouvé ou pas de rôle
+        }
+    }
+
+
 
 
 }

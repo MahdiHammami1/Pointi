@@ -92,4 +92,21 @@ public class RoleService {
         role.getPermissions().remove(permission);
         return roleRepository.save(role);
     }
+
+    public Optional<Set<Permission>> getRolePermissions(UUID roleId) {
+        return roleRepository.findById(roleId)
+                .map(Role::getPermissions);
+    }
+
+    public void addRolePermissions(UUID roleId, List<UUID> permissionIds) {
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        List<Permission> permissions = permissionRepository.findAllById(permissionIds);
+
+        role.setPermissions(new HashSet<>(permissions));
+        roleRepository.save(role);
+    }
+
+
 }

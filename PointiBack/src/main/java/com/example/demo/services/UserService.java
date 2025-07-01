@@ -42,8 +42,12 @@ public class UserService {
             user.setEmail(updatedUser.getEmail());
             user.setPassword(updatedUser.getPassword());
             user.setLastLogin(updatedUser.getLastLogin());
-            user.setVerificationCode(updatedUser.getVerificationCode());
             user.setRole(updatedUser.getRole());
+            user.setProfilePicture(updatedUser.getProfilePicture());
+            user.setFirstName(updatedUser.getFirstName());
+            user.setLastName(updatedUser.getLastName());
+            user.setPhoneNumber(updatedUser.getPhoneNumber());
+            user.setDateOfBirth(updatedUser.getDateOfBirth());
             return userRepository.save(user);
         }).orElse(null);
     }
@@ -101,6 +105,13 @@ public class UserService {
 
     public void save(User user) {
         userRepository.save(user);
+    }
+
+    public String getUsrRole(UUID id) {
+        return userRepository.findById(id)
+                .map(User::getRole)
+                .map(Role::getNom)
+                .orElse(null);
     }
 
 }

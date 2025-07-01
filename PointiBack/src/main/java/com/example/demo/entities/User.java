@@ -38,6 +38,10 @@ public class User implements UserDetails {
 
     private LocalDate dateOfBirth;
 
+    @Lob
+    @Column(name = "profile_picture")
+    private byte[] profilePicture;
+
 
     @Column(nullable = false)
     private String password;
