@@ -147,7 +147,7 @@ export class Profile implements OnInit {
       }
 
       this.http
-        .put<User>(`http://localhost:8080/users/${this.currentUserId}`, updatedUser)
+        .put<User>(`http://localhost:8080/users/${this.currentUserId}`, updatedUser , { headers: this.getHeaders() } )
         .pipe(
           catchError((error) => {
             console.error("Failed to update profile:", error)

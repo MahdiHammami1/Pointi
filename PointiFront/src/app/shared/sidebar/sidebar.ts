@@ -86,8 +86,6 @@ export class Sidebar {
       title: 'SETTINGS',
       items: [
         { icon: 'bi-person-circle', label: 'Profile', route : '/loggedin/profile' },
-        { icon: 'bi-gear', label: 'Settings' },
-        { icon: 'bi-question-circle', label: 'Help & Support' }
       ]
     }
   ];
@@ -216,7 +214,7 @@ export class Sidebar {
     if (confirmLogout) {
       console.log('User logging out...');
       // Clear user session
-      localStorage.removeItem('userToken');
+      localStorage.removeItem('token');
       localStorage.removeItem('userData');
       // Redirect to login
       // this.router.navigate(['/login']);

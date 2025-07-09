@@ -49,7 +49,7 @@ export class Login {
         .subscribe(response => {
           if (response) {
             console.log('Login successful:', response);
-            this.router.navigateByUrl('/loggedin');
+            this.router.navigateByUrl('/loggedin/home');
             this.showMessage('Login successful', 'success');
             localStorage.setItem('token', response.token); // ⬅️ Store token
             // Example: localStorage.setItem('token', response.token);

@@ -11,7 +11,7 @@
             <div class="header-content">
               <h1 class="header-title mb-1">Permission Management</h1>
               <p class="header-subtitle mb-0" *ngIf="selectedRole">
-                Managing permissions for: <strong>{{ selectedRole.name }}</strong>
+                Managing permissions for: <strong>{{ selectedRole.nom }}</strong>
               </p>
             </div>
           </div>
@@ -99,7 +99,7 @@
               <i class="fas fa-user-shield"></i>
             </div>
             <div>
-              <h6 class="role-name">{{ selectedRole.name }}</h6>
+              <h6 class="role-name">{{ selectedRole.nom }}</h6>
               <p class="role-desc">{{ selectedRole.description }}</p>
             </div>
           </div>

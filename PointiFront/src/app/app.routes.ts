@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { Layout } from './shared/layout/layout';
 import { authGuard } from './features/auth/auth.guard';
-import { RoleComponent } from './features/roles/roles';
 
 export const routes: Routes = [
     {
@@ -12,12 +11,13 @@ export const routes: Routes = [
         path: 'loggedin',
         component: Layout,
         canActivate: [authGuard],
-        canActivateChild: [authGuard],
         runGuardsAndResolvers: 'always',
         children: [
             {
                 path: 'home',
-                loadChildren: () => import('./features/home-page/homepage.routes').then(m => m.HomePage_ROUTES)
+                loadChildren: () => import('./features/home-page/homepage.routes').then(m => m.HomePage_ROUTES),
+                canActivate: [authGuard] // extra safety
+
             },
             {
                 path: 'users',
@@ -28,14 +28,20 @@ export const routes: Routes = [
             ,{
                 path: 'profile',
                 loadChildren: () => import('./features/profile/profile.routes').then(m => m.Profile_ROUTES),
+                canActivate: [authGuard] // extra safety
+
             },
             {
                 path: 'roles',
                 loadChildren: () => import('./features/roles/roles.routes').then(m => m.Role_ROUTES),
+                canActivate: [authGuard] // extra safety
+
             }
             ,{
                 path: 'permissions',
                 loadChildren: () => import('./features/permissions/permissions.routes').then(m => m.Permission_ROUTES),
+                canActivate: [authGuard] // extra safety
+    
             }
         ]
     },

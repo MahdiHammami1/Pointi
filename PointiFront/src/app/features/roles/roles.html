@@ -1,4 +1,7 @@
+
 <div class="container-fluid py-4">
+
+
   <!-- Header Section -->
   <div class="row mb-4">
     <div class="col-12">
@@ -16,8 +19,60 @@
     </div>
   </div>
 
+<!-- Add Role Button -->
+<button type="button" class="btn btn-primary" 
+        data-bs-toggle="modal" 
+        data-bs-target="#exampleModal">
+  Create new role 
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <!-- Alert Success/Error -->
+      <div *ngIf="showSuccessAlert" class="alert alert-success m-3">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="showErrorAlert" class="alert alert-danger m-3">
+        {{ errorMessage }}
+      </div>
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add New Role</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form form [formGroup]="roleForm">
+          <div class="form-group">
+            <label for="recipient-nom" class="col-form-label" >Name:</label>
+            <input type="text" class="form-control" id="recipient-nom" formControlName="nom" placeholder="Nom du rôle"  required>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Description:</label>
+            <textarea class="form-control" id="message-text" formControlName="description" placeholder="Description du rôle"></textarea>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" (click)="createRole()">Create</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<br>
+<br>
+
+ <div class="container">
   <!-- Loading State -->
-  <div *ngIf="loading" class="text-center py-5">
+  <div *ngIf="loading" class="text-center py-5 fade-in-up">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
@@ -28,15 +83,17 @@
   <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
     <i class="fas fa-exclamation-triangle me-2"></i>
     {{ error }}
-    <button type="button" class="btn-close" (click)="error = null"></button>
+    <button type="button" class="btn-close" (click)="error = null" aria-label="Close"></button>
   </div>
 
   <!-- Roles Grid -->
   <div *ngIf="!loading && !error" class="row g-4">
-    <div class="col-xl-4 col-lg-6 col-md-6" *ngFor="let role of roles; trackBy: trackByRoleId">
-      <div class="role-card">
-       
-        
+    <div 
+      class="col-xl-4 col-lg-6 col-md-6" 
+      *ngFor="let role of roles; trackBy: trackByRoleId; let i = index"
+      [class]="'stagger-' + (i % 6 + 1)">
+      
+      <div class="role-card fade-in-up">
         <div class="role-card-body">
           <h5 class="role-title">{{ role.nom }}</h5>
           <p class="role-description">{{ role.description || 'No description available' }}</p>
@@ -57,6 +114,13 @@
             <i class="fas fa-cog me-2"></i>
             Modify Permissions
           </button>
+          <button 
+            class="btn btn-danger"
+            (click)="deleteRole(role.id)"
+            [attr.aria-label]="'Delete role ' + role.nom">
+            <i class="fas fa-trash me-2"></i>
+            Delete
+          </button>
         </div>
       </div>
     </div>
@@ -68,7 +132,7 @@
       <i class="fas fa-users-slash"></i>
     </div>
     <h3>No Roles Found</h3>
-    <p>There are no roles configured in the system.</p>
+    <p>There are no roles configured in the system. Create your first role to get started.</p>
     <button class="btn btn-primary" (click)="loadRoles()">
       <i class="fas fa-refresh me-2"></i>
       Refresh

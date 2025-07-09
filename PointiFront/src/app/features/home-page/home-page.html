@@ -1,1 +1,409 @@
-<p>home-page works!</p>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Pointi</div>
+                
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Statistics Cards -->
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Employés Présents</span>
+                        <div class="stat-icon green">👥</div>
+                    </div>
+                    <div class="stat-value" id="presentEmployees">27/37</div>
+                    <div class="stat-change positive">
+                        ↗️ +5% par rapport à hier
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Badges Actifs</span>
+                        <div class="stat-icon blue">🏷️</div>
+                    </div>
+                    <div class="stat-value" id="activeBadges">32</div>
+                    <div class="stat-change neutral">
+                        📊 5 badges en attente
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Retards Aujourd'hui</span>
+                        <div class="stat-icon orange">⏰</div>
+                    </div>
+                    <div class="stat-value" id="lateArrivals">8</div>
+                    <div class="stat-change negative">
+                        ↘️ -3 par rapport à hier
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Heures Supplémentaires</span>
+                        <div class="stat-icon purple">⚡</div>
+                    </div>
+                    <div class="stat-value" id="overtime">24h</div>
+                    <div class="stat-change positive">
+                        ↗️ +12h cette semaine
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="chart-section">
+                <div class="chart-card">
+                    <h3 class="chart-title">Heures de Pointe - Aujourd'hui</h3>
+                    <div class="peak-hours-chart" id="peakHoursChart">
+                        <div class="hour-bar" style="height: 30%;" data-hour="8h" data-count="45"></div>
+                        <div class="hour-bar" style="height: 85%;" data-hour="9h" data-count="128"></div>
+                        <div class="hour-bar" style="height: 95%;" data-hour="10h" data-count="142"></div>
+                        <div class="hour-bar" style="height: 90%;" data-hour="11h" data-count="135"></div>
+                        <div class="hour-bar" style="height: 75%;" data-hour="12h" data-count="112"></div>
+                        <div class="hour-bar" style="height: 60%;" data-hour="13h" data-count="89"></div>
+                        <div class="hour-bar" style="height: 88%;" data-hour="14h" data-count="132"></div>
+                        <div class="hour-bar" style="height: 92%;" data-hour="15h" data-count="138"></div>
+                        <div class="hour-bar" style="height: 70%;" data-hour="16h" data-count="105"></div>
+                        <div class="hour-bar" style="height: 45%;" data-hour="17h" data-count="68"></div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Activité Récente</h3>
+                    <div class="recent-activity">
+                        <div class="activity-item">
+                            <div class="activity-status in"></div>
+                            <div class="activity-content">
+                                <div class="activity-text">Marie Dubois - Arrivée</div>
+                                <div class="activity-time">Il y a 2 minutes</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-status break"></div>
+                            <div class="activity-content">
+                                <div class="activity-text">Jean Martin - Pause déjeuner</div>
+                                <div class="activity-time">Il y a 5 minutes</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-status out"></div>
+                            <div class="activity-content">
+                                <div class="activity-text">Sophie Laurent - Départ</div>
+                                <div class="activity-time">Il y a 8 minutes</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-status in"></div>
+                            <div class="activity-content">
+                                <div class="activity-text">Pierre Moreau - Retour de pause</div>
+                                <div class="activity-time">Il y a 12 minutes</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-status in"></div>
+                            <div class="activity-content">
+                                <div class="activity-text">Anna Silva - Arrivée (Retard)</div>
+                                <div class="activity-time">Il y a 15 minutes</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Performance -->
+            <div class="team-section">
+                <div class="team-card">
+                    <h3 class="chart-title">Employés par Statut</h3>
+                    <div class="employee-item">
+                        <div class="employee-info">
+                            <div class="employee-avatar">MD</div>
+                            <div class="employee-details">
+                                <h4>Marie Dubois</h4>
+                                <p>Développeuse Senior</p>
+                            </div>
+                        </div>
+                        <div class="employee-status">
+                            <span class="status-badge present">Présente</span>
+                        </div>
+                    </div>
+                    <div class="employee-item">
+                        <div class="employee-info">
+                            <div class="employee-avatar">JM</div>
+                            <div class="employee-details">
+                                <h4>Jean Martin</h4>
+                                <p>Chef de Projet</p>
+                            </div>
+                        </div>
+                        <div class="employee-status">
+                            <span class="status-badge break">En Pause</span>
+                        </div>
+                    </div>
+                    <div class="employee-item">
+                        <div class="employee-info">
+                            <div class="employee-avatar">SL</div>
+                            <div class="employee-details">
+                                <h4>Sophie Laurent</h4>
+                                <p>Designer UX</p>
+                            </div>
+                        </div>
+                        <div class="employee-status">
+                            <span class="status-badge absent">Absente</span>
+                        </div>
+                    </div>
+                    <div class="employee-item">
+                        <div class="employee-info">
+                            <div class="employee-avatar">PM</div>
+                            <div class="employee-details">
+                                <h4>Pierre Moreau</h4>
+                                <p>Analyste</p>
+                            </div>
+                        </div>
+                        <div class="employee-status">
+                            <span class="status-badge present">Présent</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <h3 class="chart-title">Gestion des Badges</h3>
+                    <div class="badge-grid">
+                        <div class="badge-item active">
+                            <div class="badge-number">A001</div>
+                            <div class="badge-status">Actif</div>
+                        </div>
+                        <div class="badge-item active">
+                            <div class="badge-number">A002</div>
+                            <div class="badge-status">Actif</div>
+                        </div>
+                        <div class="badge-item">
+                            <div class="badge-number">A003</div>
+                            <div class="badge-status">En attente</div>
+                        </div>
+                        <div class="badge-item active">
+                            <div class="badge-number">A004</div>
+                            <div class="badge-status">Actif</div>
+                        </div>
+                        <div class="badge-item">
+                            <div class="badge-number">A005</div>
+                            <div class="badge-status">Désactivé</div>
+                        </div>
+                        <div class="badge-item active">
+                            <div class="badge-number">A006</div>
+                            <div class="badge-status">Actif</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <h3 class="chart-title">Distribution des Rôles</h3>
+                    <div class="role-distribution">
+                        <div class="role-tag">
+                            👨‍💼 Managers
+                            <span class="role-count">12</span>
+                        </div>
+                        <div class="role-tag">
+                            👩‍💻 Développeurs
+                            <span class="role-count">45</span>
+                        </div>
+                        <div class="role-tag">
+                            🎨 Designers
+                            <span class="role-count">8</span>
+                        </div>
+                        <div class="role-tag">
+                            📊 Analystes
+                            <span class="role-count">15</span>
+                        </div>
+                        <div class="role-tag">
+                            🔧 Support
+                            <span class="role-count">22</span>
+                        </div>
+                        <div class="role-tag">
+                            📋 Admin
+                            <span class="role-count">6</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        class AttendanceManager {
+            constructor() {
+                this.updateCurrentTime();
+                this.initializeAnimations();
+                this.startRealTimeUpdates();
+            }
+
+            updateCurrentTime() {
+                const now = new Date();
+                const timeElement = document.getElementById('currentTime');
+                const dateElement = document.getElementById('currentDate');
+                
+                if (timeElement) {
+                    timeElement.textContent = now.toLocaleTimeString('fr-FR');
+                }
+                
+                if (dateElement) {
+                    const options = { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    };
+                    dateElement.textContent = now.toLocaleDateString('fr-FR', options);
+                }
+            }
+
+            initializeAnimations() {
+                // Animate stat cards on load
+                const statCards = document.querySelectorAll('.stat-card');
+                statCards.forEach((card, index) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    
+                    setTimeout(() => {
+                        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+
+                // Animate peak hours bars
+                const hourBars = document.querySelectorAll('.hour-bar');
+                hourBars.forEach((bar, index) => {
+                    const originalHeight = bar.style.height;
+                    bar.style.height = '0%';
+                    
+                    setTimeout(() => {
+                        bar.style.transition = 'height 0.8s ease';
+                        bar.style.height = originalHeight;
+                    }, 1000 + index * 100);
+                });
+            }
+
+            startRealTimeUpdates() {
+                // Update time every second
+                setInterval(() => {
+                    this.updateCurrentTime();
+                }, 1000);
+
+                // Update statistics every 30 seconds
+                setInterval(() => {
+                    this.updateStatistics();
+                }, 30000);
+
+                // Simulate new activity every 2 minutes
+                setInterval(() => {
+                    this.addNewActivity();
+                }, 120000);
+            }
+
+            updateStatistics() {
+                const presentEmployees = document.getElementById('presentEmployees');
+                const activeBadges = document.getElementById('activeBadges');
+                const lateArrivals = document.getElementById('lateArrivals');
+                const overtime = document.getElementById('overtime');
+
+                // Simulate small changes in statistics
+                if (presentEmployees) {
+                    const [current, total] = presentEmployees.textContent.split('/').map(n => parseInt(n));
+                    const change = Math.random() > 0.7 ? (Math.random() > 0.5 ? 1 : -1) : 0;
+                    const newCurrent = Math.max(0, Math.min(total, current + change));
+                    presentEmployees.textContent = `${newCurrent}/${total}`;
+                }
+
+                if (lateArrivals) {
+                    const current = parseInt(lateArrivals.textContent);
+                    const change = Math.random() > 0.8 ? 1 : 0;
+                    lateArrivals.textContent = (current + change).toString();
+                }
+            }
+
+            addNewActivity() {
+                const activities = [
+                    { name: "Lucas Bernard", action: "Arrivée", status: "in" },
+                    { name: "Emma Rousseau", action: "Départ", status: "out" },
+                    { name: "Thomas Petit", action: "Pause", status: "break" },
+                    { name: "Camille Roux", action: "Retour de pause", status: "in" }
+                ];
+
+                const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+                const activityContainer = document.querySelector('.recent-activity');
+                
+                if (activityContainer) {
+                    const newActivity = document.createElement('div');
+                    newActivity.className = 'activity-item';
+                    newActivity.innerHTML = `
+                        <div class="activity-status ${randomActivity.status}"></div>
+                        <div class="activity-content">
+                            <div class="activity-text">${randomActivity.name} - ${randomActivity.action}</div>
+                            <div class="activity-time">À l'instant</div>
+                        </div>
+                    `;
+                    
+                    activityContainer.insertBefore(newActivity, activityContainer.firstChild);
+                    
+                    // Remove oldest activity if more than 5
+                    const activities = activityContainer.querySelectorAll('.activity-item');
+                    if (activities.length > 5) {
+                        activityContainer.removeChild(activities[activities.length - 1]);
+                    }
+                }
+            }
+
+            addHoverEffects() {
+                const cards = document.querySelectorAll('.stat-card, .chart-card, .team-card');
+                
+                cards.forEach(card => {
+                    card.addEventListener('mouseenter', () => {
+                        card.style.transform = 'translateY(-4px)';
+                        card.style.boxShadow = '0 8px 25px 0 rgba(0, 0, 0, 0.15)';
+                    });
+
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transform = 'translateY(0)';
+                        card.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)';
+                    });
+                });
+
+                // Badge hover effects
+                const badges = document.querySelectorAll('.badge-item');
+                badges.forEach(badge => {
+                    badge.addEventListener('click', () => {
+                        const badgeNumber = badge.querySelector('.badge-number').textContent;
+                        alert(`Badge ${badgeNumber} - Détails et permissions`);
+                    });
+                });
+            }
+        }
+
+        // Initialize attendance manager when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const attendanceManager = new AttendanceManager();
+            attendanceManager.addHoverEffects();
+        });
+
+        // Add click handlers for interactive elements
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.hour-bar')) {
+                const bar = e.target.closest('.hour-bar');
+                const hour = bar.getAttribute('data-hour');
+                const count = bar.getAttribute('data-count');
+                alert(`${hour}: ${count} employés présents`);
+            }
+
+            if (e.target.closest('.role-tag')) {
+                const roleTag = e.target.closest('.role-tag');
+                const roleText = roleTag.textContent.trim();
+                alert(`Gestion des permissions pour: ${roleText}`);
+            }
+        });
+    </script>

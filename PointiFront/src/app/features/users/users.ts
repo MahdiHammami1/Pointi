@@ -33,6 +33,13 @@ const headers = new HttpHeaders({
   styleUrls: ['./users.css']
 })
 export class Users implements OnInit {
+
+    roles: any[] = [];
+    selectedRole: string = '';
+    selectedRoleId: string = '';
+    selectedUserForRole: any = null;
+
+
   private http = inject(HttpClient);
   
   
@@ -44,6 +51,12 @@ export class Users implements OnInit {
 
 ngOnInit() {
     this.loadUsers();
+    this.http.get<any[]>('http://localhost:8080/roles', {headers}).subscribe({
+    next: data => this.roles = data,
+    error: err => console.error('Erreur chargement rôles', err)
+  });
+
+  
   }
 
   private getHeaders(): HttpHeaders {
@@ -51,6 +64,36 @@ ngOnInit() {
       'Authorization': 'Bearer ' + (localStorage.getItem('token') || '')
     });
   }
+
+   assignRoleToUser(userId: string, roleId: string) {
+  if (!roleId) {
+    console.error("Aucun rôle sélectionné");
+    return;
+  }
+
+  const url = `http://localhost:8080/users/${userId}/modify-role/${roleId}`;
+  const headers = {
+    Authorization: 'Bearer ' + localStorage.getItem('token')
+  };
+
+  this.http.put(url, {}, { headers }).subscribe({
+    next: user => {
+      console.log('Rôle assigné avec succès', user);
+      // met à jour localement si besoin
+    },
+    error: err => console.error('Erreur lors de l\'assignation du rôle', err)
+  });
+}
+
+closeModal() {
+  // Fermer modal Bootstrap via JS
+  const modalElement = document.getElementById('exampleModal');
+  if (modalElement) {
+    // @ts-ignore
+    const modal = bootstrap.Modal.getInstance(modalElement);
+    modal?.hide();
+  }
+}
 
     async loadUsers() {
     this.loading = true;
@@ -83,6 +126,8 @@ ngOnInit() {
   getRoleName(user: User): string {
     return user?.role?.nom || 'No Role';
   }
+
+  
   
 
 

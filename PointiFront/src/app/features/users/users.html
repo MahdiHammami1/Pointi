@@ -36,18 +36,13 @@
           <th>Modified At</th>
           <th>Role</th>
           <th>Actions</th>
+          
         </tr>
       </thead>
-      <tbody>
-        <tr *ngFor="let user of filteredUsers; trackBy: trackByUserId" class="user-row">
-          <td class="user-name">
-            <div class="name-container">
-              <div class="avatar">{{ user.firstName.charAt(0) }}{{ user.lastName.charAt(0) }}</div>
-              <div>
-                <div class="full-name">{{ user.firstName }} {{ user.lastName }}</div>
-              </div>
-            </div>
-          </td>
+     <tbody>
+          <tr *ngFor="let user of filteredUsers; trackBy: trackByUserId" class="user-row">
+            <!-- colonnes utilisateur... -->
+          <td>{{ user.firstName }} {{ user.lastName }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.phoneNumber || 'N/A' }}</td>
           <td>{{ formatDate(user.dateOfBirth) }}</td>
@@ -56,16 +51,54 @@
           <td>{{ formatDateTime(user.modifiedAt) }}</td>
           <td>{{ getRoleName(user) }}</td>
 
-          <td class="actions">
-            <button class="btn btn-secondary btn-sm" (click)="editUser(user)" title="Edit User">
-              ✏️
-            </button>
-            <button class="btn btn-danger btn-sm" (click)="deleteUser(user)" title="Delete User">
-              🗑️
-            </button>
-          </td>
-        </tr>
-      </tbody>
+            <td class="actions">
+              <!-- Bouton ouvrir modal + définir selectedUser -->
+              <button type="button" class="btn btn-primary" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#exampleModal"
+                      (click)="selectedUserForRole = user">
+                ✏️
+              </button>
+
+              <button class="btn btn-danger btn-sm" (click)="deleteUser(user)" title="Delete User">
+                🗑️
+              </button>
+            </td>
+          </tr>
+        </tbody>
+
+        <!-- Modal (hors de la boucle) -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Set Role for {{ selectedUserForRole?.firstName }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+              <div class="modal-body" *ngIf="selectedUserForRole">
+                <select [(ngModel)]="selectedUserForRole.selectedRoleId" class="form-select">
+                    <option value="" disabled selected>Select a role</option>
+                  <option *ngFor="let role of roles" [value]="role.id">{{ role.nom }}</option>
+                </select>
+              </div>
+
+              <div class="modal-footer" *ngIf="selectedUserForRole">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button (click)="assignRoleToUser(selectedUserForRole.id, selectedUserForRole.selectedRoleId); closeModal()" class="btn btn-primary">
+                  Assigner le rôle
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+       
+
     </table>
 
     <div class="no-results" *ngIf="filteredUsers.length === 0 && !loading">
