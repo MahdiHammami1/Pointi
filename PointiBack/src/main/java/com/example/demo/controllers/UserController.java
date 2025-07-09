@@ -24,6 +24,11 @@ public class UserController {
         return userService.createUser(user);
     }
 
+    @PostMapping("/addAll")
+    public List<User> createUsers(@RequestBody List<User> users) {
+        return userService.createUsers(users);
+    }
+
     @GetMapping("")
     public List<User> getAllUsers() {
         return userService.getAllUsers();

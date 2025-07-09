@@ -23,6 +23,11 @@ public class RoleController {
     public Role createRole(@RequestBody Role role) {
         return roleService.createRole(role);
     }
+    @PostMapping("/addAll")
+    public List<Role> createRoles(@RequestBody List<Role> roles) {
+        return roleService.createRoles(roles);
+    }
+
 
     @GetMapping
     public List<Role> getAllRoles() {

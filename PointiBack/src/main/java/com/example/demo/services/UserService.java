@@ -114,4 +114,8 @@ public class UserService {
                 .orElse(null);
     }
 
+    public List<User> createUsers(List<User> users) {
+        return userRepository.saveAll(users);
+    }
+
 }
