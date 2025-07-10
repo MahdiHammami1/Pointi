@@ -4,6 +4,8 @@ import com.example.demo.entities.Permission;
 import com.example.demo.entities.Role;
 import com.example.demo.repositories.PermissionRepository;
 import com.example.demo.repositories.RoleRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -23,8 +25,8 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
-    public List<Role> getAllRoles() {
-        return roleRepository.findAll();
+    public Page<Role> getAllRoles(Pageable pageable) {
+        return roleRepository.findAll(pageable);
     }
 
     public Optional<Role> getRoleById(UUID id) {

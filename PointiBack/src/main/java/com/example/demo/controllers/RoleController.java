@@ -5,6 +5,9 @@ import com.example.demo.entities.Permission;
 import com.example.demo.entities.Role;
 import com.example.demo.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +33,10 @@ public class RoleController {
 
 
     @GetMapping
-    public List<Role> getAllRoles() {
-        return roleService.getAllRoles();
+    public Page<Role> getAllRoles(@RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "3") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return roleService.getAllRoles(pageable);
     }
 
     @GetMapping("/{id}")
