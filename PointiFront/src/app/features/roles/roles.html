@@ -138,4 +138,16 @@
       Refresh
     </button>
   </div>
+   <div class="pagination-controls">
+  <button (click)="previousPage()" [disabled]="currentPage === 0">Previous</button>
+
+  <button
+    *ngFor="let page of pageNumbers"
+    [class.active]="page === currentPage"
+    (click)="goToPage(page)">
+    {{ page + 1 }}
+  </button>
+
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages - 1">Next</button>
+</div>
 </div>

@@ -1,1 +1,152 @@
-<p>employees works!</p>
+<!-- Search Section -->
+<div class="search-section" id="search">
+  <div class="search-box">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="onSearch()"
+      placeholder="Search employees by name, email, or phone..."
+      class="search-input"
+    />
+    <span class="search-icon">🔍</span>
+  </div>
+</div>
+
+<!-- Add Employee Button -->
+<button type="button" class="btn btn-primary"
+        id="create"      
+        data-bs-toggle="modal"
+        data-bs-target="#employeeModal">
+  ➕ Add Employee
+</button>
+
+<!-- Modal: Create Employee -->
+<div class="modal fade" id="employeeModal" tabindex="-1" role="dialog" aria-labelledby="employeeModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <!-- Alerts -->
+      <div *ngIf="showSuccessAlert" class="alert alert-success m-3">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="showErrorAlert" class="alert alert-danger m-3">
+        {{ errorMessage }}
+      </div>
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="employeeModalLabel">Add New Employee</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="employeeForm">
+          <div class="form-group mb-2">
+            <label for="nomPrenom" class="col-form-label">Full Name:</label>
+            <input type="text" class="form-control" id="nomPrenom" formControlName="nomPrenom" placeholder="Full name" required>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="email" class="col-form-label">Email:</label>
+            <input type="email" class="form-control" id="email" formControlName="email" placeholder="Email address" required>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="idInterne" class="col-form-label">Internal ID:</label>
+            <input type="number" class="form-control" id="idInterne" formControlName="idInterne" required>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="numTel" class="col-form-label">Phone Number:</label>
+            <input type="number" class="form-control" id="numTel" formControlName="numTel" required>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="numTellp" class="col-form-label">Personal Phone:</label>
+            <input type="number" class="form-control" id="numTellp" formControlName="numTellp" required>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="numBureau" class="col-form-label">Office Number:</label>
+            <input type="number" class="form-control" id="numBureau" formControlName="numBureau" required>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="direction" class="col-form-label">Department:</label>
+            <select class="form-select form-control" id="direction" formControlName="direction">
+              <option value="RH">HR</option>
+              <option value="IT">IT</option>
+              <option value="FINANCE">FINANCE</option>
+            </select>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="createEmployee()">Create</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Loading Indicator -->
+<div class="loading" *ngIf="loading">
+  <div class="spinner"></div>
+  Loading employees...
+</div>
+
+<!-- Table of Employees -->
+<div class="table-container" *ngIf="!loading">
+  <table class="users-table">
+    <thead>
+      <tr>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Personal Phone</th>
+        <th>Office</th>
+        <th>Department</th>
+        <th>Created At</th>
+        <th>Updated At</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let employee of pagedEmployees" class="user-row">
+        <td>{{ employee.nomPrenom }}</td>
+        <td>{{ employee.email }}</td>
+        <td>{{ employee.numTel || 'N/A' }}</td>
+        <td>{{ employee.numTellp || 'N/A' }}</td>
+        <td>{{ employee.numBureau || 'N/A' }}</td>
+        <td>{{ employee.direction }}</td>
+        <td>{{ employee.createdAt ? (employee.createdAt | date:'short') : 'N/A' }}</td>
+        <td>{{ employee.modifiedAt ? (employee.modifiedAt | date:'short') : 'N/A' }}</td>
+
+        <td class="actions">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editEmployeeModal">✏️</button>
+          <button class="btn btn-danger btn-sm" title="Delete employee" (click)="deleteEmployee(employee.id)">🗑️</button>
+        </td>
+      </tr>
+      <tr *ngIf="pagedEmployees.length === 0">
+        <td colspan="9" class="text-center">No employees found.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination -->
+<div class="pagination-controls">
+  <button (click)="previousPage()" [disabled]="currentPage === 0">Previous</button>
+
+  <button
+    *ngFor="let page of pageNumbers"
+    [class.active]="page === currentPage"
+    (click)="goToPage(page)">
+    {{ page + 1 }}
+  </button>
+
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages - 1">Next</button>
+</div>

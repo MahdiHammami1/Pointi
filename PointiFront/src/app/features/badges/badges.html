@@ -1,1 +1,46 @@
-<p>badges works!</p>
+<div class="badges-container">
+  <h2 class="title">Badges List</h2>
+  <div class="card-grid">
+    <div class="badge-card" *ngFor="let badge of badges" [style.border-color]="badge.color">
+  <h3>{{ badge.name }}</h3>
+  <p>{{ badge.description }}</p>
+  <div class="badge-color" [style.backgroundColor]="badge.color"></div>
+
+  <button class="delete-btn" (click)="deleteBadge(badge.id)" title="Delete badge">🗑️</button>
+</div>
+  </div>
+
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createBadgeModal">➕ Create Badge</button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="createBadgeModal" tabindex="-1" aria-labelledby="badgeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="badgeModalLabel">Create New Badge</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="badgeForm">
+          <div class="form-group mb-3">
+            <label for="name">Name</label>
+            <input id="name" type="text" formControlName="name" class="form-control" required>
+          </div>
+          <div class="form-group mb-3">
+            <label for="description">Description</label>
+            <textarea id="description" formControlName="description" class="form-control"></textarea>
+          </div>
+          <div class="form-group mb-3">
+            <label for="color">Color</label>
+            <input id="color" type="color" formControlName="color" class="form-control form-control-color">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" (click)="createBadge()">Create</button>
+      </div>
+    </div>
+  </div>
+</div>

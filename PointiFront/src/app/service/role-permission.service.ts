@@ -1,13 +1,17 @@
 import { Injectable } from "@angular/core"
 import { HttpClient, HttpHeaders } from "@angular/common/http"
 import  { Observable } from "rxjs"
-import  { Role, Permission, RolePermissionRequest } from "../models/role.model"
+import  { Role, Permission, RolePermissionRequest, PaginatedRolesResponse } from "../models/role.model"
 
 @Injectable({
   providedIn: "root",
 })
 export class RolePermissionService {
   private baseUrl = "http://localhost:8080"
+
+  currentPage = 0;
+  pageSize = 3;
+  totalPages = 0;
 
   constructor(
     private http: HttpClient) {}
@@ -19,13 +23,14 @@ export class RolePermissionService {
   }
 
 
+
   createRole(nom: string, description: string) {
   const body = { nom, description };
   return this.http.post('http://localhost:8080/roles', body , { headers: this.getHeaders() });
 }
 
-  getRoles(): Observable<Role[]> {
-    return this.http.get<Role[]>(`http://localhost:8080/roles`, {headers: this.getHeaders()})
+  getRoles(): Observable<PaginatedRolesResponse> {
+    return this.http.get<PaginatedRolesResponse>(`http://localhost:8080/roles?page=${this.currentPage}&size=${this.pageSize}`, {headers: this.getHeaders()})
   }
 
   getPermissions(): Observable<Permission[]> {

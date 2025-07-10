@@ -28,6 +28,10 @@ export class RoleComponent implements OnInit {
 
   showErrorAlert = false;
   errorMessage = '';
+
+  currentPage = 0;
+  pageSize = 5;
+  totalPages = 0;
   
   constructor(
     private rolePermissionService: RolePermissionService,
@@ -51,21 +55,48 @@ export class RoleComponent implements OnInit {
 }
 
   loadRoles(): void {
-    this.loading = true
-    this.error = null
+  this.loading = true;
+  this.error = null;
 
-    this.rolePermissionService.getRoles().subscribe({
-      next: (roles) => {
-        this.roles = roles
-        this.loading = false
-      },
-      error: (error) => {
-        this.error = "Failed to load roles. Please try again."
-        this.loading = false
-        console.error("Error loading roles:", error)
-      },
-    })
+  this.rolePermissionService.getRoles().subscribe({
+    next: (response) => {
+      this.roles = response.content; // ✅ on prend juste le tableau
+      this.totalPages = response.totalPages; // ✅ on met à jour la pagination
+      this.loading = false;
+    },
+    error: (error) => {
+      this.error = "Failed to load roles. Please try again.";
+      this.loading = false;
+      console.error("Error loading roles:", error);
+    },
+  });
+}
+
+
+
+  
+get pageNumbers(): number[] {
+  return Array(this.totalPages).fill(0).map((x, i) => i);
+}
+
+goToPage(page: number) {
+  this.currentPage = page;
+  this.loadRoles();
+}
+
+nextPage() {
+  if (this.currentPage < this.totalPages - 1) {
+    this.currentPage++;
+    this.loadRoles();
   }
+}
+
+previousPage() {
+  if (this.currentPage > 0) {
+    this.currentPage--;
+    this.loadRoles();
+  }
+}
 
   modifyPermissions(role: Role): void {
     // Store selected role in localStorage

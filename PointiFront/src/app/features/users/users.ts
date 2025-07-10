@@ -10,6 +10,16 @@ interface Role {
   
 }
 
+interface PaginatedResponse<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  number: number;
+  size: number;
+}
+
+
+
 interface User {
   id: string;
   firstName: string;
@@ -48,11 +58,18 @@ export class Users implements OnInit {
   searchTerm: string = '';
   loading: boolean = false;
   error: string = '';
+  currentPage = 0;
+  pageSize = 5;
+  totalPages = 0;
+  
 
 ngOnInit() {
     this.loadUsers();
-    this.http.get<any[]>('http://localhost:8080/roles', {headers}).subscribe({
-    next: data => this.roles = data,
+    this.http.get<PaginatedResponse<Role>>('http://localhost:8080/roles', {headers}).subscribe({
+    next: data => {
+    this.roles = data.content; // ✅ accède à content sans erreur
+    console.log(this.roles);
+  },
     error: err => console.error('Erreur chargement rôles', err)
   });
 
@@ -85,6 +102,30 @@ ngOnInit() {
   });
 }
 
+get pageNumbers(): number[] {
+  return Array(this.totalPages).fill(0).map((x, i) => i);
+}
+
+goToPage(page: number) {
+  this.currentPage = page;
+  this.loadUsers();
+}
+
+nextPage() {
+  if (this.currentPage < this.totalPages - 1) {
+    this.currentPage++;
+    this.loadUsers();
+  }
+}
+
+previousPage() {
+  if (this.currentPage > 0) {
+    this.currentPage--;
+    this.loadUsers();
+  }
+}
+
+
 closeModal() {
   // Fermer modal Bootstrap via JS
   const modalElement = document.getElementById('exampleModal');
@@ -95,32 +136,32 @@ closeModal() {
   }
 }
 
-    async loadUsers() {
-    this.loading = true;
-    this.error = '';
-    const headers = this.getHeaders();
+   async loadUsers() {
+  this.loading = true;
+  this.error = '';
+  const headers = this.getHeaders();
+  
 
-    try {
-      // Fetch all users (with roles included)
-      const users = await lastValueFrom(
-        this.http.get<User[]>('http://localhost:8080/users', { headers }).pipe(
-          catchError(err => {
-            console.error('Error loading users:', err);
-            throw 'Failed to load users. Please try again.';
-          })
-        )
-      );
+  try {
+    const response = await lastValueFrom(
+      this.http.get<any>(`http://localhost:8080/users?page=${this.currentPage}&size=${this.pageSize}`, { headers }).pipe(
+        catchError(err => {
+          console.error('Error loading users:', err);
+          throw 'Failed to load users. Please try again.';
+        })
+      )
+    );
 
-      // No need for separate role calls - roles are already included
-      this.users = users;
-      this.filteredUsers = users;
-    } catch (error) {
-      this.error = typeof error === 'string' ? error : 'Failed to load users.';
-      console.error('Error:', error);
-    } finally {
-      this.loading = false;
-    }
+    this.users = response.content;
+    this.filteredUsers = response.content;
+    this.totalPages = response.totalPages;
+  } catch (error) {
+    this.error = typeof error === 'string' ? error : 'Failed to load users.';
+    console.error('Error:', error);
+  } finally {
+    this.loading = false;
   }
+}
 
   // Helper method to get role name safely
   getRoleName(user: User): string {

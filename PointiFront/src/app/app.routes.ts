@@ -42,6 +42,17 @@ export const routes: Routes = [
                 loadChildren: () => import('./features/permissions/permissions.routes').then(m => m.Permission_ROUTES),
                 canActivate: [authGuard] // extra safety
     
+            },
+            {
+                path: 'employees',
+                loadChildren: () => import('./features/employees/employee.routes').then(m => m.Employee_ROUTES),
+                canActivate: [authGuard] // extra safety
+            }, 
+            {
+                path: 'badges',
+                loadChildren: () => import('./features/badges/badges.route').then(m => m.Badges_ROUTES),
+
+
             }
         ]
     },

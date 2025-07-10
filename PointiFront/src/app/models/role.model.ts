@@ -14,3 +14,9 @@ export interface Permission {
 export interface RolePermissionRequest {
   permissionIds: string[]
 }
+
+
+export interface PaginatedRolesResponse {
+  content: Role[];
+  totalPages: number;
+}

@@ -65,8 +65,8 @@ export class Sidebar {
         { icon: 'bi-speedometer2', label: 'Dashboard', badge: 5, badgeColor: 'primary', active: true },
         { icon: "bi bi-gear-fill", label: 'Roles'  , route: '/loggedin/roles' },
         { icon: 'bi-people', label: 'Users', badge: 12, badgeColor: 'success', route: '/loggedin/users' },
-        { icon: 'bi-patch-check', label: 'Badges' },
-        { icon: 'bi-person-workspace', label: 'Employees' },
+        { icon: 'bi-patch-check', label: 'Badges' , route : '/loggedin/badges'},
+        { icon: 'bi-person-workspace', label: 'Employees' , route : '/loggedin/employees' },
         { icon: 'bi-person-plus', label: 'Visitors' },
 
 
