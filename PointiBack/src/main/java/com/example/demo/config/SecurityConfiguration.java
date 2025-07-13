@@ -24,26 +24,24 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
 
     public SecurityConfiguration(JwtAuthenticationFilter jwtAuthFilter,
-                          AuthenticationProvider authenticationProvider) {
+                                 AuthenticationProvider authenticationProvider) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.authenticationProvider = authenticationProvider;
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults()) // This applies your CORS config
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll() // Only /auth/** is public
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .anyRequest().authenticated()           // All other routes require authentication
-                )
-                .sessionManagement(sess -> sess
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                        .requestMatchers(
+                                "/", "/index.html", "/favicon.ico",
+                                "/assets/**", "/browser/**", "/styles.css",
+                                "/*.js", "/*.css", "/**/*.js", "/**/*.css", "/**/*.js", "/auth/**","/**/register" , "/**/verify"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                ) ;
+
 
         return http.build();
     }
@@ -52,7 +50,7 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // <-- Frontend origin
+        configuration.setAllowedOrigins(List.of("http://localhost:4200" , "https://c19f9e8bbea7.ngrok-free.app")); // <-- Frontend origin
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true); // Optional

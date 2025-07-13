@@ -5,10 +5,12 @@ import com.example.demo.dto.RegisterUserDTO;
 import com.example.demo.dto.VerifyUserDTO;
 import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
+import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.responses.SignupResponse;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,6 +31,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
     private final JwtService jwtService;
+    @Autowired
+    private RoleRepository roleRepository;
 
     public AuthenticationService(
             UserRepository userRepository,
@@ -45,6 +49,9 @@ public class AuthenticationService {
     }
 
     public SignupResponse signup(RegisterUserDTO input) {
+
+        Role defaultRole = roleRepository.findByNom("ADMIN")
+                .orElseThrow(() -> new RuntimeException("Default role USER not found"));
         try {
             // Basic validation
             if (userRepository.existsByEmail(input.getEmail())) {
@@ -80,6 +87,9 @@ public class AuthenticationService {
             user.setEnabled(false);
             user.setVerificationCode(verificationCode);
             user.setVerificationCodeExpiry(LocalDateTime.now().plusMinutes(15));
+
+
+            user.setRole(defaultRole); // Associe un rôle dès l’inscription
 
             User savedUser = userRepository.save(user);
 
