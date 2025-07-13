@@ -111,6 +111,7 @@
         <th>Department</th>
         <th>Created At</th>
         <th>Updated At</th>
+        <th>Badge</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -124,9 +125,11 @@
         <td>{{ employee.direction }}</td>
         <td>{{ employee.createdAt ? (employee.createdAt | date:'short') : 'N/A' }}</td>
         <td>{{ employee.modifiedAt ? (employee.modifiedAt | date:'short') : 'N/A' }}</td>
+         <td>{{ getBadgeName(employee) }}</td>
 
         <td class="actions">
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editEmployeeModal">✏️</button>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editBadgeModal" (click)="openEditBadgeModal(employee.id!)"
+ >✏️</button>
           <button class="btn btn-danger btn-sm" title="Delete employee" (click)="deleteEmployee(employee.id)">🗑️</button>
         </td>
       </tr>
@@ -149,4 +152,34 @@
   </button>
 
   <button (click)="nextPage()" [disabled]="currentPage === totalPages - 1">Next</button>
+</div>
+
+<!-- Modal: Modifier Badge -->
+<div class="modal fade" id="editBadgeModal" tabindex="-1" aria-labelledby="editBadgeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="editBadgeModalLabel">Assigner un badge</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Fermer">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <label for="badgeSelect">Badge :</label>
+        <select id="badgeSelect" [(ngModel)]="selectedBadgeId" class="form-select form-control">
+          <option *ngFor="let badge of badges" [value]="badge.id">
+            {{ badge.name }} - {{ badge.color }}
+          </option>
+        </select>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn btn-primary" (click)="assignBadgeToEmployee()" data-bs-dismiss="modal">Assigner</button>
+      </div>
+
+    </div>
+  </div>
 </div>

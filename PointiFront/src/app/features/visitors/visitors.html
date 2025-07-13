@@ -1,0 +1,140 @@
+<!-- Search Section -->
+<div class="search-section" id="search">
+  <div class="search-box">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="onSearch()"
+      placeholder="Search visitors by name, CIN, or organisation..."
+      class="search-input"
+    />
+    <span class="search-icon">🔍</span>
+  </div>
+</div>
+
+<!-- Add Visitor Button -->
+<button type="button" class="btn btn-primary"
+        id="create"      
+        data-bs-toggle="modal"
+        data-bs-target="#visitorModal">
+  ➕ Add Visitor
+</button>
+
+<!-- Modal: Create Visitor -->
+<div class="modal fade" id="visitorModal" tabindex="-1" role="dialog" aria-labelledby="visitorModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div *ngIf="showSuccessAlert" class="alert alert-success m-3">{{ successMessage }}</div>
+      <div *ngIf="showErrorAlert" class="alert alert-danger m-3">{{ errorMessage }}</div>
+
+      <div class="modal-header">
+        <h5 class="modal-title">Add New Visitor</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="visitorForm">
+          <div class="form-group mb-2">
+            <label for="nomPrenom">Full Name:</label>
+            <input type="text" class="form-control" id="nomPrenom" formControlName="nomPrenom" placeholder="Full name">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="cin">CIN:</label>
+            <input type="number" class="form-control" id="cin" formControlName="cin">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="organisation">Organisation:</label>
+            <input type="text" class="form-control" id="organisation" formControlName="organisation">
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" (click)="createVisitor()">Create</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Loading Spinner -->
+<div class="loading" *ngIf="loading">
+  <div class="spinner"></div>
+  Loading visitors...
+</div>
+
+<!-- Table of Visitors -->
+<div class="table-container" *ngIf="!loading">
+  <table class="users-table">
+    <thead>
+      <tr>
+        <th>Full Name</th>
+        <th>CIN</th>
+        <th>Organisation</th>
+        <th>Created At</th>
+        <th>Updated At</th>
+        <th>Badges</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let visitor of filteredVisitors" class="user-row">
+        <td>{{ visitor.nomPrenom }}</td>
+        <td>{{ visitor.cin }}</td>
+        <td>{{ visitor.organisation }}</td>
+        <td>{{ visitor.createdAt ? (visitor.createdAt | date:'short') : 'N/A' }}</td>
+        <td>{{ visitor.updatedAt ? (visitor.updatedAt | date:'short') : 'N/A' }}</td>
+        <td>
+          {{ getBadgeName(visitor) }}
+        </td>
+        <td class="actions">
+          <button class="btn btn-danger btn-sm" (click)="deleteVisitor(visitor.id!)">🗑️</button>
+<button
+  type="button"
+  class="btn btn-primary"
+  data-bs-toggle="modal"
+  data-bs-target="#editBadgeModal"
+  (click)="openEditBadgeModal(visitor.id!)">
+  ✏️
+</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal: Modifier Badge du visiteur -->
+<div class="modal fade" id="editBadgeModal" tabindex="-1" aria-labelledby="editBadgeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="editBadgeModalLabel">Assigner un badge au visiteur</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Fermer">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <label for="badgeSelect">Badge :</label>
+        <select id="badgeSelect" [(ngModel)]="selectedBadgeId" class="form-select form-control">
+          <option *ngFor="let badge of badges" [value]="badge.id">
+            {{ badge.name }} - {{ badge.color }}
+          </option>
+        </select>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn btn-primary" (click)="assignBadgeToVisitor()" data-bs-dismiss="modal">Assigner</button>
+      </div>
+
+    </div>
+  </div>
+</div>

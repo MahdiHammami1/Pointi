@@ -21,13 +21,12 @@ export class Login {
     private fb: FormBuilder,
     private http: HttpClient,
     private snackBar: MatSnackBar,
-     private router: Router
+    private router: Router
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       rememberMe: [false],
-      
     });
   }
 
@@ -41,21 +40,26 @@ export class Login {
       this.http.post<any>('http://localhost:8080/auth/login', loginData)
         .pipe(
           catchError(error => {
-            console.error( error);
-            this.showMessage(' Invalid email or password', 'error');
+            console.error(error);
+            this.showMessage('Invalid email or password', 'error');
             return of(null);
           })
         )
         .subscribe(response => {
-          if (response) {
-            console.log('Login successful:', response);
-            this.router.navigateByUrl('/loggedin/home');
+          console.log('🚀 Réponse brute du backend :', response);
+          if (response && response.token && response.user) {
+            // ✅ Sauvegarde du token et de l'utilisateur dans le localStorage
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('user', JSON.stringify(response.user)); // ✅
+
+            // ✅ Message de succès
             this.showMessage('Login successful', 'success');
-            localStorage.setItem('token', response.token); // ⬅️ Store token
-            // Example: localStorage.setItem('token', response.token);
-            // Example: this.router.navigate(['/dashboard']);
+
+            // ✅ Redirection
+            this.router.navigateByUrl('/loggedin/home');
           }
         });
+
     } else {
       this.showMessage('Please fill out the form correctly.', 'error');
     }

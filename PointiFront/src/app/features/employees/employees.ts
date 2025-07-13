@@ -11,7 +11,13 @@ enum Direction {
 }
 
 
-
+ interface Badge {
+  id?: string; // UUID - optional for creation
+  name: string;
+  color?: string;
+  description?: string;
+  assigned?: boolean;
+}
 interface Employee {
   id?: number;
   idInterne: number;
@@ -23,6 +29,7 @@ interface Employee {
   email: string;
   createdAt?: string;
   modifiedAt?: string;
+  badge:Badge ;
 }
 
 @Component({
@@ -42,6 +49,10 @@ export class Employees implements OnInit {
   currentPage = 0;
   pageSize = 5;
   totalPages = 0;
+
+  badges: any[] = [];
+  selectedBadgeId: string = '';
+  selectedEmployeeId: number | null = null;
 
   employeeForm!: FormGroup;
   showSuccessAlert = false;
@@ -78,7 +89,7 @@ export class Employees implements OnInit {
 
     try {
       const response = await lastValueFrom(
-        this.http.get<any>(`http://localhost:8080/employes?page=${this.currentPage}&size=${this.pageSize}`, { headers })
+        this.http.get<any>(`http://localhost:8080/employees?page=${this.currentPage}&size=${this.pageSize}`, { headers })
     .pipe(
           catchError(err => {
             console.error('Error loading users:', err);
@@ -152,7 +163,7 @@ async deleteEmployee(id?: number): Promise<void> {
 
   try {
     await lastValueFrom(
-      this.http.delete(`http://localhost:8080/employes/${id}`, { headers }).pipe(
+      this.http.delete(`http://localhost:8080/employees/${id}`, { headers }).pipe(
         catchError(err => {
           console.error('Erreur lors de la suppression :', err);
           throw 'Échec de la suppression. Veuillez réessayer.';
@@ -183,7 +194,7 @@ createEmployee(): void {
 
   const newEmployee: Employee = this.employeeForm.value;
 
-  this.http.post<Employee>('http://localhost:8080/employes', newEmployee, {
+  this.http.post<Employee>('http://localhost:8080/employees', newEmployee, {
     headers: this.getHeaders()
   }).subscribe({
     next: () => {
@@ -198,7 +209,42 @@ createEmployee(): void {
       this.showErrorAlert = true;
     }
   });
-}
+ }
+ 
+  openEditBadgeModal(employeeId: number) {
+    this.selectedEmployeeId = employeeId;
+    
+
+    this.http.get<any>('http://localhost:8080/badges', { headers: this.getHeaders() }).subscribe({
+      next: (data) => {
+        this.badges = data;
+      },
+      error: (err) => {
+        console.error('Erreur chargement badges', err);
+      }
+    });
+  }
+
+  assignBadgeToEmployee() {
+    if (!this.selectedBadgeId || this.selectedEmployeeId === null) return;
+
+    const url = `http://localhost:8080/employees/${this.selectedEmployeeId}/badge/${this.selectedBadgeId}`;
+    this.http.put(url, {}, { headers: this.getHeaders() }).subscribe({
+      next: () => {
+        alert('Badge assigné avec succès');
+        this.selectedBadgeId = '';
+        this.selectedEmployeeId = null;
+        this.loadEmployees();
+      },
+      error: (err) => {
+        console.error('Erreur lors de l’assignation du badge', err);
+      }
+    });
+  }
+
+   getBadgeName(employee: Employee): string {
+    return employee?.badge?.name || 'No Role';
+  }
 
 
 }

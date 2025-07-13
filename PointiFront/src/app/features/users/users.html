@@ -68,7 +68,7 @@
         </tbody>
 
         <!-- Modal (hors de la boucle) -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
           <div class="modal-dialog" role="document">
             <div class="modal-content">
 
@@ -88,7 +88,7 @@
 
               <div class="modal-footer" *ngIf="selectedUserForRole">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button (click)="assignRoleToUser(selectedUserForRole.id, selectedUserForRole.selectedRoleId); closeModal()" class="btn btn-primary">
+                <button (click)="assignRoleToUser(selectedUserForRole.id, selectedUserForRole.selectedRoleId); closeModal()" class="btn btn-primary" > 
                   Assigner le rôle
                 </button>
               </div>

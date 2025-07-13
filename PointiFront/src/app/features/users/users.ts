@@ -82,7 +82,7 @@ ngOnInit() {
     });
   }
 
-   assignRoleToUser(userId: string, roleId: string) {
+assignRoleToUser(userId: string, roleId: string) {
   if (!roleId) {
     console.error("Aucun rôle sélectionné");
     return;
@@ -93,12 +93,23 @@ ngOnInit() {
     Authorization: 'Bearer ' + localStorage.getItem('token')
   };
 
-  this.http.put(url, {}, { headers }).subscribe({
-    next: user => {
-      console.log('Rôle assigné avec succès', user);
-      // met à jour localement si besoin
+  this.http.put<User>(url, {}, { headers }).subscribe({
+    next: updatedUser => {
+      console.log('Rôle assigné avec succès', updatedUser);
+
+      // 🔁 Update the user in the local users array
+      const index = this.users.findIndex(u => u.id === userId);
+      if (index !== -1) {
+        this.users[index] = updatedUser;
+        this.filteredUsers[index] = updatedUser; // if you use a filtered list
+      }
+
+      // Optional: Close the modal
+      this.closeModal();
     },
-    error: err => console.error('Erreur lors de l\'assignation du rôle', err)
+    error: err => {
+      console.error('Erreur lors de l\'assignation du rôle', err);
+    }
   });
 }
 
