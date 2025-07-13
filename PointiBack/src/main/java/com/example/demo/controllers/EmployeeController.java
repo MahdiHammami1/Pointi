@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 
 import com.example.demo.entities.Employee;
+import com.example.demo.entities.User;
 import com.example.demo.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,13 +11,17 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
-@RequestMapping("/employes")
+@RequestMapping("/employees")
 @CrossOrigin
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeService;
+    @Autowired
+    private EmployeeService employeeService;
 
     @GetMapping
     public Page<Employee> getAll(@PageableDefault(page = 0, size = 5) Pageable pageable) {
@@ -49,4 +54,19 @@ public class EmployeeController {
         employeService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/set-badge")
+    public Employee setBadgeToEmployee(@RequestParam Integer employeeID, @RequestParam UUID badgeID) {
+        return employeeService.setBadgeToEmployee(employeeID, badgeID);
+    }
+
+    @PutMapping("/{employeeID}/badge/{badgeID}")
+    public ResponseEntity<Employee> modifyRoleOfUser(
+            @PathVariable Integer employeeID,
+            @PathVariable UUID badgeID) {
+        Employee updatedEmployee = employeeService.modifyRoleOfUser(employeeID, badgeID);
+        return ResponseEntity.ok(updatedEmployee);
+    }
+
+
 }

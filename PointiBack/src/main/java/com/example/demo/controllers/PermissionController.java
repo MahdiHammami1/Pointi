@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.entities.Permission;
 import com.example.demo.services.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,5 +45,15 @@ public class PermissionController {
         permissionService.deletePermission(id);
     }
 
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAllPermissions() {
+        permissionService.deleteAllPermissions();
+        return ResponseEntity.noContent().build();
+    }
 
+    @PostMapping("addAll")
+    public ResponseEntity<Void> addAllPermissions(@RequestBody List<Permission> permissions) {
+        permissionService.createPermissions(permissions);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.dto.UserDTO;
 import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
 import com.example.demo.services.UserService;
@@ -80,9 +81,9 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public User getLoggedUser(Authentication authentication) {
-        User user = (User) authentication.getPrincipal(); // your custom User class
-        return user; // or user.getId(), etc.
+    public ResponseEntity<UserDTO> getCurrentUser(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(convertToDTO(user));
     }
 
     @GetMapping("/getRole/{id}")
@@ -93,6 +94,22 @@ public class UserController {
         } else {
             return ResponseEntity.notFound().build(); // 404 si utilisateur non trouvé ou pas de rôle
         }
+    }
+
+    public UserDTO convertToDTO(User user) {
+        return new UserDTO(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getUsername(),
+                user.getPhoneNumber(),
+                user.getDateOfBirth(),
+                user.getLastLogin(),
+                user.getCreatedAt(),
+                user.getModifiedAt(),
+                user.getRole() //
+        );
     }
 
 

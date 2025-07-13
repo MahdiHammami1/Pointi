@@ -27,4 +27,8 @@ public class Badge {
     private String description;
 
     private boolean assigned = false;
+
+    @ManyToOne
+    @JoinColumn(name = "visiteur_id")
+    private Visiteur visiteur;
 }

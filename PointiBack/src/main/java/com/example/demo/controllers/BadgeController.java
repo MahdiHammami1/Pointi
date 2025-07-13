@@ -1,7 +1,9 @@
 package com.example.demo.controllers;
 
 import com.example.demo.entities.Badge;
+import com.example.demo.entities.User;
 import com.example.demo.services.BadgeService;
+import com.example.demo.services.EmployeeService;
 import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.UUID;
 public class BadgeController {
 
     private final BadgeService badgeService;
+    private final EmployeeService employeeService;
 
     @GetMapping
     public ResponseEntity<List<Badge>> getAllBadges() {
@@ -52,4 +55,6 @@ public class BadgeController {
         badgeService.deleteBadge(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }

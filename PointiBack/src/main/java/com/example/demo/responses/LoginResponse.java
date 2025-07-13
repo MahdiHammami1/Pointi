@@ -1,12 +1,14 @@
 package com.example.demo.responses;
 
 
-
+import com.example.demo.dto.UserDTO;
+import com.example.demo.entities.User;
 
 public class LoginResponse {
     private String token;
     private long expiresIn;
     private String message;
+
 
 
     public LoginResponse() {}
@@ -15,6 +17,8 @@ public class LoginResponse {
         this.token = token;
         this.expiresIn = expiresIn;
         this.message = message;
+        this.user = user;
+
 
     }
 
@@ -41,5 +45,16 @@ public class LoginResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+
+    private UserDTO user;
+
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
     }
 }

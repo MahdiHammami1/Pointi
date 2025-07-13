@@ -30,6 +30,11 @@ public class Employee {
 
     private String email;
 
+    @ManyToOne
+    @JoinColumn(name = "badge_id")
+
+    private Badge badge;
+
     @Column(updatable = false , name = "created_at")
     private LocalDateTime createdAt;
 

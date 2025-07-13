@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.dto.LoginUserDTO;
 import com.example.demo.dto.RegisterUserDTO;
+import com.example.demo.dto.UserDTO;
 import com.example.demo.dto.VerifyUserDTO;
 import com.example.demo.entities.User;
 import com.example.demo.repositories.UserRepository;
@@ -34,8 +35,7 @@ public class AuthenticationController {
     private final UserRepository userRepository;
 
 
-
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserRepository userRepository,RoleService roleService) {
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserRepository userRepository, RoleService roleService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
         this.userService = new UserService(userRepository);
@@ -56,8 +56,6 @@ public class AuthenticationController {
     }
 
 
-
-
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDTO loginUserDto) {
         // Find user by email
@@ -65,7 +63,7 @@ public class AuthenticationController {
 
         if (optionalUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new LoginResponse("User not found",10000 , null));
+                    .body(new LoginResponse("User not found", 10000, null));
         }
 
         User user = optionalUser.get();
@@ -80,15 +78,20 @@ public class AuthenticationController {
         user.setLastLogin(LocalDateTime.now());
         userService.save(user); // Assure-toi que cette méthode fait bien un save dans le repository
 
+        // ⚠️ Forcer chargement des permissions (si LAZY)
+        user.getRole().getPermissions().size();
 
         // Generate JWT token
         String jwtToken = jwtService.generateToken(user);
+        UserDTO userDto = convertToDTO(user); // ajoute cette ligne
 
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(jwtToken);
-        loginResponse.getToken() ;
+        loginResponse.getToken();
         loginResponse.setExpiresIn(jwtService.getExpirationTime());
         loginResponse.setMessage("Login successful");
+        loginResponse.setUser(userDto); // ✅ AJOUTE L'UTILISATEUR
+
 
 
         return ResponseEntity.ok(loginResponse);
@@ -115,11 +118,21 @@ public class AuthenticationController {
         }
     }
 
+    public UserDTO convertToDTO(User user) {
+        return new UserDTO(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getUsername(),
+                user.getPhoneNumber(),
+                user.getDateOfBirth(),
+                user.getLastLogin(),
+                user.getCreatedAt(),
+                user.getModifiedAt(),
+                user.getRole() //
 
+        );
+    }
 
-
-
-
-
-    
 }
