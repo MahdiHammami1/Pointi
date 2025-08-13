@@ -1,2 +1,3 @@
 # Pointi
-Application web des gestion d'une pointeuse 
+Application web de gestion d'entrée sortie du personnel et des visiteurs chez l'administration et l'agent de securité
+
