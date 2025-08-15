@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { showConfirmDialog } from '../../shared/utils/sweetalert';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -154,35 +155,41 @@ previousPage() {
 }
 
 async deleteEmployee(id?: number): Promise<void> {
-  const confirmed = confirm("Voulez-vous vraiment supprimer cet employé ?");
-  if (!confirmed) return;
+   const confirmed = await showConfirmDialog({
+     title: 'Suppression',
+     text: 'Voulez-vous vraiment supprimer cet employé ?',
+     icon: 'warning',
+     confirmButtonText: 'Oui, supprimer',
+     cancelButtonText: 'Annuler'
+   });
+   if (!confirmed) return;
 
-  this.loading = true;
-  this.error = '';
-  const headers = this.getHeaders();
+   this.loading = true;
+   this.error = '';
+   const headers = this.getHeaders();
 
-  try {
-    await lastValueFrom(
-      this.http.delete(`http://localhost:8080/employees/${id}`, { headers }).pipe(
-        catchError(err => {
-          console.error('Erreur lors de la suppression :', err);
-          throw 'Échec de la suppression. Veuillez réessayer.';
-        })
-      )
-    );
+   try {
+     await lastValueFrom(
+       this.http.delete(`http://localhost:8080/employees/${id}`, { headers }).pipe(
+         catchError(err => {
+           console.error('Erreur lors de la suppression :', err);
+           throw 'Échec de la suppression. Veuillez réessayer.';
+         })
+       )
+     );
 
-    // Mise à jour locale de la liste
-    this.employees = this.employees.filter(emp => emp.id !== id);
-    this.filteredEmployees = this.filteredEmployees.filter(emp => emp.id !== id);
+     // Mise à jour locale de la liste
+     this.employees = this.employees.filter(emp => emp.id !== id);
+     this.filteredEmployees = this.filteredEmployees.filter(emp => emp.id !== id);
 
-    // Recalculer pagination si nécessaire
-    this.totalPages = Math.ceil(this.employees.length / this.pageSize);
+     // Recalculer pagination si nécessaire
+     this.totalPages = Math.ceil(this.employees.length / this.pageSize);
 
-  } catch (error) {
-    this.error = typeof error === 'string' ? error : 'Échec de la suppression.';
-  } finally {
-    this.loading = false;
-  }
+   } catch (error) {
+     this.error = typeof error === 'string' ? error : 'Échec de la suppression.';
+   } finally {
+     this.loading = false;
+   }
 }
 
 createEmployee(): void {

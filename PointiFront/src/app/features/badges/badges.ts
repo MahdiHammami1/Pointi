@@ -1,3 +1,4 @@
+import { showConfirmDialog } from '../../shared/utils/sweetalert';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -54,14 +55,21 @@ export class BadgesComponent {
     }
   }
 
-  deleteBadge(id: string): void {
-  if (confirm('Are you sure you want to delete this badge?')) {
-    this.http.delete(`http://localhost:8080/badges/${id}`,{ headers }).subscribe({
-      next: () => {
-        this.badges = this.badges.filter(badge => badge.id !== id);
-      },
-      error: err => console.error('Error deleting badge:', err)
+  async deleteBadge(id: string): Promise<void> {
+    const confirmed = await showConfirmDialog({
+      title: 'Suppression',
+      text: 'Êtes-vous sûr de vouloir supprimer ce badge ?',
+      icon: 'warning',
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler'
     });
+    if (confirmed) {
+      this.http.delete(`http://localhost:8080/badges/${id}`,{ headers }).subscribe({
+        next: () => {
+          this.badges = this.badges.filter(badge => badge.id !== id);
+        },
+        error: err => console.error('Error deleting badge:', err)
+      });
+    }
   }
-}
 }

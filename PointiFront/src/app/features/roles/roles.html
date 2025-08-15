@@ -1,4 +1,5 @@
-
+<div class="no-scroll">
+  
 <div class="container-fluid py-4">
 
 
@@ -26,44 +27,31 @@
   Create new role 
 </button>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+
+<!-- Modal (harmonisé avec badge) -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
     <div class="modal-content">
-
-      <!-- Alert Success/Error -->
-      <div *ngIf="showSuccessAlert" class="alert alert-success m-3">
-        {{ successMessage }}
+      <div class="modal-header bg-light border-0" style="border-radius: 1rem 1rem 0 0;">
+        <h5 class="modal-title" id="exampleModalLabel">Create New Role</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div *ngIf="showErrorAlert" class="alert alert-danger m-3">
-        {{ errorMessage }}
-      </div>
-
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add New Role</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
       <div class="modal-body">
-        <form form [formGroup]="roleForm">
-          <div class="form-group">
-            <label for="recipient-nom" class="col-form-label" >Name:</label>
-            <input type="text" class="form-control" id="recipient-nom" formControlName="nom" placeholder="Nom du rôle"  required>
+        <form [formGroup]="roleForm">
+          <div class="form-group mb-3">
+            <label for="recipient-nom">Name</label>
+            <input type="text" class="form-control" id="recipient-nom" formControlName="nom" placeholder="Nom du rôle" required>
           </div>
-          <div class="form-group">
-            <label for="message-text" class="col-form-label">Description:</label>
+          <div class="form-group mb-3">
+            <label for="message-text">Description</label>
             <textarea class="form-control" id="message-text" formControlName="description" placeholder="Description du rôle"></textarea>
           </div>
         </form>
       </div>
-
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" (click)="createRole()">Create</button>
+      <div class="modal-footer bg-light border-0" style="border-radius: 0 0 1rem 1rem;">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" (click)="createRole()">Create</button>
       </div>
-
     </div>
   </div>
 </div>
@@ -126,6 +114,11 @@
     </div>
   </div>
 
+
+  <div *ngIf="message" class="alert-message">{{ message }}</div>
+
+
+  
   <!-- Empty State -->
   <div *ngIf="!loading && !error && roles.length === 0" class="empty-state">
     <div class="empty-icon">
@@ -150,4 +143,6 @@
 
   <button (click)="nextPage()" [disabled]="currentPage === totalPages - 1">Next</button>
 </div>
+</div>
+
 </div>

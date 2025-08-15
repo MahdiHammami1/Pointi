@@ -17,10 +17,8 @@
                         <span class="stat-title">Employés Présents</span>
                         <div class="stat-icon green">👥</div>
                     </div>
-                    <div class="stat-value" id="presentEmployees">27/37</div>
-                    <div class="stat-change positive">
-                        ↗️ +5% par rapport à hier
-                    </div>
+                    <div class="stat-value" id="presentEmployees">{{ employeesCount }}</div>
+                    
                 </div>
 
                 <div class="stat-card">
@@ -28,22 +26,12 @@
                         <span class="stat-title">Badges Actifs</span>
                         <div class="stat-icon blue">🏷️</div>
                     </div>
-                    <div class="stat-value" id="activeBadges">32</div>
-                    <div class="stat-change neutral">
-                        📊 5 badges en attente
-                    </div>
+                    <div class="stat-value" id="activeBadges">{{ activeBadgesCount }}</div>
+                    
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <span class="stat-title">Retards Aujourd'hui</span>
-                        <div class="stat-icon orange">⏰</div>
-                    </div>
-                    <div class="stat-value" id="lateArrivals">8</div>
-                    <div class="stat-change negative">
-                        ↘️ -3 par rapport à hier
-                    </div>
-                </div>
+               
+
 
                 <div class="stat-card">
                     <div class="stat-header">
@@ -174,29 +162,9 @@
                 <div class="team-card">
                     <h3 class="chart-title">Gestion des Badges</h3>
                     <div class="badge-grid">
-                        <div class="badge-item active">
-                            <div class="badge-number">A001</div>
-                            <div class="badge-status">Actif</div>
-                        </div>
-                        <div class="badge-item active">
-                            <div class="badge-number">A002</div>
-                            <div class="badge-status">Actif</div>
-                        </div>
-                        <div class="badge-item">
-                            <div class="badge-number">A003</div>
-                            <div class="badge-status">En attente</div>
-                        </div>
-                        <div class="badge-item active">
-                            <div class="badge-number">A004</div>
-                            <div class="badge-status">Actif</div>
-                        </div>
-                        <div class="badge-item">
-                            <div class="badge-number">A005</div>
-                            <div class="badge-status">Désactivé</div>
-                        </div>
-                        <div class="badge-item active">
-                            <div class="badge-number">A006</div>
-                            <div class="badge-status">Actif</div>
+                        <div *ngFor="let badge of badges" class="badge-item" [ngClass]="{'active': badge.status === 'Actif'}">
+                            <div class="badge-number">{{ badge.name || badge.numero || badge.id }}</div>
+                            <div class="badge-status">{{ badge.status || badge.statut || 'Actif' }}</div>
                         </div>
                     </div>
                 </div>

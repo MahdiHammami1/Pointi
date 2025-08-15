@@ -45,7 +45,7 @@ export class RolePermissionService {
   return this.http.delete<void>(`http://localhost:8080/roles/${id}`, {headers: this.getHeaders()});
 }
 
-  updateRolePermissions(roleId: string, request: RolePermissionRequest): Observable<any> {
-    return this.http.post(`http://localhost:8080/roles/${roleId}/permissions`, request, {headers: this.getHeaders()})
-  }
+    updateRolePermissions(roleId: string, request: RolePermissionRequest): Observable<any> {
+      return this.http.post(`http://localhost:8080/roles/${roleId}/permissions`, request, {headers: this.getHeaders()})
+    }
 }

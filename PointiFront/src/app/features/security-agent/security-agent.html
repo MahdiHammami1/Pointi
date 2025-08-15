@@ -1,0 +1,63 @@
+
+<!-- ÉTAPE 1 : Recherche visiteur -->
+<div *ngIf="currentStep === 1">
+  <div class="filter-form">
+    <h2>🔎 Filtrer les visiteurs</h2>
+    <form (ngSubmit)="applyFilter()">
+      <label>3 derniers chiffres du CIN :</label>
+      <input type="text" [(ngModel)]="filters.cin" name="cin" maxlength="3" pattern="[0-9]*" />
+
+      <label>Nom/Prénom :</label>
+      <input type="text" [(ngModel)]="filters.nomPrenom" name="nomPrenom" />
+
+      <label>Organisation :</label>
+      <input type="text" [(ngModel)]="filters.organisation" name="organisation" />
+
+      <button type="submit">Rechercher</button>
+    </form>
+  </div>
+
+  <div class="results" *ngIf="visiteurs.length > 0">
+    <h3>Résultats :</h3>
+    <ul>
+      <li *ngFor="let v of visiteurs">
+        <strong>{{ v.nomPrenom }}</strong> - CIN : {{ v.cin }} - Org : {{ v.organisation }}
+        <button (click)="selectedVisiteur = v; goToStep(2)">Affecter à un employé</button>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="visiteurs.length === 0">
+    Aucun visiteur trouvé.
+    <button (click)="goToStep(3)">Créer un nouveau visiteur</button>
+  </div>
+</div >
+<!-- Bouton logout en haut à droite -->
+<div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+  <button class="btn btn-danger" (click)="logout()">Logout</button>
+</div>
+
+
+<!-- ÉTAPE 2 : Affectation du visiteur à un employé -->
+<div *ngIf="currentStep === 2">
+  <h2>Affecter le visiteur à un employé</h2>
+  <div *ngIf="selectedVisiteur">
+    <p><strong>Visiteur :</strong> {{ selectedVisiteur.nomPrenom }} (CIN : {{ selectedVisiteur.cin }})</p>
+    <!-- TODO: Ajouter ici le formulaire ou la logique d'affectation à un employé -->
+    <button (click)="goToStep(1)">Retour à la recherche</button>
+  </div>
+</div>
+
+<!-- ÉTAPE 3 : Création du visiteur -->
+<div *ngIf="currentStep === 3">
+  <div class="container mt-4 visitor-form-container">
+    <div class="header-gradient">Ajout d’un visiteur</div>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <formly-form [form]="form" [fields]="fields" [model]="model"></formly-form>
+      <button type="submit" class="btn btn-primary mt-3" [disabled]="form.invalid">
+        Ajouter
+      </button>
+      <button type="button" class="btn btn-secondary mt-3" (click)="goToStep(1)">Annuler</button>
+    </form>
+  </div>
+</div>

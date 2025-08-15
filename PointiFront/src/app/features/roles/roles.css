@@ -1285,3 +1285,40 @@ textarea.form-control:focus-visible {
   color: white;
   font-weight: bold;
 }
+
+.warn-snackbar {
+  background-color: #e53935;
+  color: white;
+  font-weight: bold;
+}
+
+.alert-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+
+
+/* Supprime tout espace blanc globalement */
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  background-color: #fff; /* ou la couleur de fond que tu veux */
+}
+
+/* Si tu veux que tout remplisse l'écran */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.no-scroll {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}

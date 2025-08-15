@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { showConfirmDialog } from '../../shared/utils/sweetalert';
 // Update the path below to the correct relative path if needed
 import { Badge, Visitor } from '../../models/visitor.model';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -83,8 +84,15 @@ selectedBadgeId?: string;
     });
   }
 
-  deleteVisitor(id: number) {
-    if (confirm('Are you sure you want to delete this visitor?')) {
+  async deleteVisitor(id: number) {
+    const confirmed = await showConfirmDialog({
+      title: 'Suppression',
+      text: 'Êtes-vous sûr de vouloir supprimer ce visiteur ?',
+      icon: 'warning',
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler'
+    });
+    if (confirmed) {
       this.visitorService.delete(id).subscribe(() => {
         this.visitors = this.visitors.filter(v => v.id !== id);
         this.filteredVisitors = this.filteredVisitors.filter(v => v.id !== id);

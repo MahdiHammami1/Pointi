@@ -1,9 +1,12 @@
+import { showConfirmDialog } from '../../shared/utils/sweetalert';
 import { Component, type OnInit } from "@angular/core"
 import  { Router } from "@angular/router"
 import  { RolePermissionService } from "../../service/role-permission.service"
 import { Role } from "../../models/role.model"
 import { CommonModule } from "@angular/common"
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms"
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 interface RoleForm {
   nom: string;
@@ -36,7 +39,8 @@ export class RoleComponent implements OnInit {
   constructor(
     private rolePermissionService: RolePermissionService,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar
   ) {}
 
  
@@ -60,8 +64,8 @@ export class RoleComponent implements OnInit {
 
   this.rolePermissionService.getRoles().subscribe({
     next: (response) => {
-      this.roles = response.content; // ✅ on prend juste le tableau
-      this.totalPages = response.totalPages; // ✅ on met à jour la pagination
+      this.roles = response.content; // 
+      this.totalPages = response.totalPages; // 
       this.loading = false;
     },
     error: (error) => {
@@ -98,13 +102,18 @@ previousPage() {
   }
 }
 
-  modifyPermissions(role: Role): void {
-    // Store selected role in localStorage
-    localStorage.setItem("selectedRole", JSON.stringify(role))
+message: string | null = null;
 
-    // Navigate to permissions component
-    this.router.navigate(["/loggedin/permissions"])
+modifyPermissions(role: Role): void {
+  if (role.nom === "ADMIN") {
+    this.message = "⚠️ You can't modify ADMIN role permissions.";
+    return;
   }
+
+  this.message = null;
+  localStorage.setItem("selectedRole", JSON.stringify(role));
+  this.router.navigate(["/loggedin/permissions"]);
+}
 
 createRole(): void {
   if (!this.roleForm) {
@@ -135,8 +144,15 @@ createRole(): void {
   });
 }
 
-deleteRole(id: string): void {
-  if (confirm('Are you sure you want to delete this role?')) {
+async deleteRole(id: string): Promise<void> {
+  const confirmed = await showConfirmDialog({
+    title: 'Suppression',
+    text: 'Êtes-vous sûr de vouloir supprimer ce rôle ?',
+    icon: 'warning',
+    confirmButtonText: 'Oui, supprimer',
+    cancelButtonText: 'Annuler'
+  });
+  if (confirmed) {
     this.rolePermissionService.deleteRole(id).subscribe({
       next: () => {
         this.roles = this.roles.filter(role => role.id !== id); // Update local list

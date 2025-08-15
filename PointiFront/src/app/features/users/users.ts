@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { showConfirmDialog } from '../../shared/utils/sweetalert';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -210,20 +211,26 @@ closeModal() {
     // You can open a modal or navigate to an edit form
   }
 
-deleteUser(user: User) {
-  if (confirm(`Delete ${user.firstName} ${user.lastName}?`)) {
+async deleteUser(user: User) {
+  const confirmed = await showConfirmDialog({
+    title: 'Suppression',
+    text: `Supprimer ${user.firstName} ${user.lastName} ?`,
+    icon: 'warning',
+    confirmButtonText: 'Oui, supprimer',
+    cancelButtonText: 'Annuler'
+  });
+  if (confirmed) {
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + localStorage.getItem('token') // Get token from storage
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     });
-
     this.http.delete(`http://localhost:8080/users/${user.id}`, { headers })
       .subscribe({
         next: () => {
-          alert('User deleted!'); // Simple alert instead of snackbar
-          this.loadUsers(); // Refresh the list
+          alert('User deleted!');
+          this.loadUsers();
         },
         error: (err) => {
-          alert('Delete failed!'); // Simple error alert
+          alert('Delete failed!');
           console.error(err);
         }
       });

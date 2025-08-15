@@ -164,16 +164,13 @@
   position: absolute;
   left: 1rem;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-100%);
   color: #9ca3af;
   transition: color 0.3s ease;
   z-index: 1;
 }
 
-.form-control-enhanced:focus ~ .form-label-enhanced .input-icon,
-.form-control-enhanced:not(:placeholder-shown) ~ .form-label-enhanced .input-icon {
-  color: #667eea;
-}
+
 
 /* Password Requirements */
 .password-requirements {

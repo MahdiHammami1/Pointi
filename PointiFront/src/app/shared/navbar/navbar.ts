@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { showConfirmDialog } from '../utils/sweetalert';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -24,17 +25,22 @@ export class Navbar {
   toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
-onLogout(): void {
-  const confirmLogout = confirm('Are you sure you want to logout?');
 
-  if (confirmLogout) {
+async onLogout(): Promise<void> {
+  const confirmed = await showConfirmDialog({
+    title: 'Déconnexion',
+    text: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+    icon: 'warning',
+    confirmButtonText: 'Oui, déconnecter',
+    cancelButtonText: 'Annuler'
+  });
+  if (confirmed) {
     console.log('User confirmed logout.');
     localStorage.removeItem('token');
     localStorage.removeItem('userData');
-    this.router.navigate(['/']); // ✅ redirect only here
+    this.router.navigate(['/']);
   } else {
     console.log('User cancelled logout.');
-    // Do not redirect, do not clear token
   }
 }
 

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { showConfirmDialog } from '../utils/sweetalert';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HostListener } from '@angular/core';
@@ -62,9 +63,9 @@ export class Sidebar {
     {
       title: 'MAIN',
       items: [
-        { icon: 'bi-speedometer2', label: 'Dashboard', badge: 5, badgeColor: 'primary' ,route :'/loggedin/home'},
+        { icon: 'bi-speedometer2', label: 'Dashboard', route :'/loggedin/home'},
         { icon: "bi bi-gear-fill", label: 'Roles'  , route: '/loggedin/roles' },
-        { icon: 'bi-people', label: 'Users', badge: 12, badgeColor: 'success', route: '/loggedin/users' },
+        { icon: 'bi-people', label: 'Users', route: '/loggedin/users' },
         { icon: 'bi-patch-check', label: 'Badges' , route : '/loggedin/badges'},
         { icon: 'bi-person-workspace', label: 'Employees' , route : '/loggedin/employees' },
         { icon: 'bi-person-plus', label: 'Visitors'  , route : '/loggedin/visitors'},
@@ -207,9 +208,15 @@ export class Sidebar {
     // Navigate to settings page
   }
   
-  onLogout(): void {
-    const confirmLogout = confirm('Are you sure you want to logout?');
-    if (confirmLogout) {
+  async onLogout(): Promise<void> {
+    const confirmed = await showConfirmDialog({
+      title: 'Déconnexion',
+      text: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+      icon: 'warning',
+      confirmButtonText: 'Oui, déconnecter',
+      cancelButtonText: 'Annuler'
+    });
+    if (confirmed) {
       console.log('User logging out...');
       // Clear user session
       localStorage.removeItem('token');

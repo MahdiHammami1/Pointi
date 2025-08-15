@@ -3,6 +3,7 @@ import { Layout } from './shared/layout/layout';
 import { authGuard } from './features/auth/auth.guard';
 import { PermissionGuard } from './guards/permission.guard';
 import { Unauthorized } from './features/unauthorized/unauthorized';
+import { SecurityAgentComponent } from './features/security-agent/security-agent';
 
 export const routes: Routes = [
     {
@@ -74,4 +75,8 @@ export const routes: Routes = [
   }
         ]
     },
+    {
+        path: 'securityagent',
+        component: SecurityAgentComponent
+    }
 ];

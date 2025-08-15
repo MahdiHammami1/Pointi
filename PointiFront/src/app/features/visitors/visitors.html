@@ -20,45 +20,35 @@
   ➕ Add Visitor
 </button>
 
-<!-- Modal: Create Visitor -->
-<div class="modal fade" id="visitorModal" tabindex="-1" role="dialog" aria-labelledby="visitorModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+
+<!-- Modal: Create Visitor (harmonisé avec badge) -->
+<div class="modal fade" id="visitorModal" tabindex="-1" aria-labelledby="visitorModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
     <div class="modal-content">
-
-      <div *ngIf="showSuccessAlert" class="alert alert-success m-3">{{ successMessage }}</div>
-      <div *ngIf="showErrorAlert" class="alert alert-danger m-3">{{ errorMessage }}</div>
-
-      <div class="modal-header">
-        <h5 class="modal-title">Add New Visitor</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span>&times;</span>
-        </button>
+      <div class="modal-header bg-light border-0" style="border-radius: 1rem 1rem 0 0;">
+        <h5 class="modal-title" id="visitorModalLabel">Create New Visitor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-
       <div class="modal-body">
         <form [formGroup]="visitorForm">
-          <div class="form-group mb-2">
-            <label for="nomPrenom">Full Name:</label>
+          <div class="form-group mb-3">
+            <label for="nomPrenom">Full Name</label>
             <input type="text" class="form-control" id="nomPrenom" formControlName="nomPrenom" placeholder="Full name">
           </div>
-
-          <div class="form-group mb-2">
-            <label for="cin">CIN:</label>
+          <div class="form-group mb-3">
+            <label for="cin">CIN</label>
             <input type="number" class="form-control" id="cin" formControlName="cin">
           </div>
-
-          <div class="form-group mb-2">
-            <label for="organisation">Organisation:</label>
+          <div class="form-group mb-3">
+            <label for="organisation">Organisation</label>
             <input type="text" class="form-control" id="organisation" formControlName="organisation">
           </div>
         </form>
       </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button class="btn btn-primary" (click)="createVisitor()">Create</button>
+      <div class="modal-footer bg-light border-0" style="border-radius: 0 0 1rem 1rem;">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" (click)="createVisitor()">Create</button>
       </div>
-
     </div>
   </div>
 </div>
