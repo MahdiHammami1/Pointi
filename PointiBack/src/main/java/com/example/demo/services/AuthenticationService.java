@@ -3,17 +3,14 @@ package com.example.demo.services;
 import com.example.demo.dto.LoginUserDTO;
 import com.example.demo.dto.RegisterUserDTO;
 import com.example.demo.dto.VerifyUserDTO;
-import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
+import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.responses.SignupResponse;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,51 +21,44 @@ import java.util.Random;
 @Slf4j
 @Service
 public class AuthenticationService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
     private final JwtService jwtService;
+    private final RoleRepository roleRepository;
+
+    // ✅ Reuse one instance of Random
+    private final Random random = new Random();
 
     public AuthenticationService(
             UserRepository userRepository,
             AuthenticationManager authenticationManager,
             PasswordEncoder passwordEncoder,
             EmailService emailService,
-            JwtService jwtService
-    ) {
+            JwtService jwtService,
+            RoleRepository roleRepository) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
         this.jwtService = jwtService;
+        this.roleRepository = roleRepository;
     }
 
     public SignupResponse signup(RegisterUserDTO input) {
         try {
-            // Basic validation
             if (userRepository.existsByEmail(input.getEmail())) {
-                return new SignupResponse(
-                        "Email already in use",
-                        null,
-                        null,
-                        false
-                );
+                return new SignupResponse("Email already in use", null, null, false);
             }
 
             if (userRepository.existsByUsername(input.getUsername())) {
-                return new SignupResponse(
-                        "Username already in use",
-                        null,
-                        null,
-                        false
-                );
+                return new SignupResponse("Username already in use", null, null, false);
             }
 
-            // Generate 6-digit verification code
             String verificationCode = generateVerificationCode();
 
-            // Create user
             User user = new User();
             user.setEmail(input.getEmail());
             user.setUsername(input.getUsername());
@@ -80,21 +70,14 @@ public class AuthenticationService {
             user.setEnabled(false);
             user.setVerificationCode(verificationCode);
             user.setVerificationCodeExpiry(LocalDateTime.now().plusMinutes(15));
+            user.setRole(roleRepository.getRoleByNom("NEW"));
 
             User savedUser = userRepository.save(user);
 
-            // Send verification email
             boolean emailSent = sendVerificationEmail(savedUser);
-
             if (!emailSent) {
-                // If email fails, delete the created user
                 userRepository.delete(savedUser);
-                return new SignupResponse(
-                        "Failed to send verification email",
-                        null,
-                        null,
-                        false
-                );
+                return new SignupResponse("Failed to send verification email", null, null, false);
             }
 
             return new SignupResponse(
@@ -103,13 +86,9 @@ public class AuthenticationService {
                     savedUser.getUsername(),
                     true
             );
+
         } catch (Exception e) {
-            return new SignupResponse(
-                    "Registration failed: " + e.getMessage(),
-                    null,
-                    null,
-                    false
-            );
+            return new SignupResponse("Registration failed: " + e.getMessage(), null, null, false);
         }
     }
 
@@ -136,9 +115,11 @@ public class AuthenticationService {
         }
     }
 
+    // ✅ Reuse the same Random object
     private String generateVerificationCode() {
-        return String.format("%06d", new Random().nextInt(999999));
+        return String.format("%06d", random.nextInt(999999));
     }
+
     public User authenticate(LoginUserDTO input) {
         User user = userRepository.findByEmail(input.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -192,12 +173,4 @@ public class AuthenticationService {
             throw new RuntimeException("User not found");
         }
     }
-
-
-
-
-
-
-
-
 }

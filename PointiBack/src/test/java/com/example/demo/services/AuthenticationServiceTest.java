@@ -12,8 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -24,14 +23,7 @@ public class AuthenticationServiceTest {
 
     @Mock
     private UserRepository userRepository;
-    @Mock
-    private AuthenticationManager authenticationManager;
-    @Mock
-    private PasswordEncoder passwordEncoder;
-    @Mock
-    private EmailService emailService;
-    @Mock
-    private JwtService jwtService;
+
 
     @InjectMocks
     private AuthenticationService authenticationService;

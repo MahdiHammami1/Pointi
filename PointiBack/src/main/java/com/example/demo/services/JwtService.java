@@ -89,9 +89,14 @@ public class JwtService {
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
         return this.secretKey;
     }
-
-    // Optional setter to allow programmatic injection
-    public void setSecretKey(Key secretKey) {
-        this.secretKey = secretKey;
+    public String generateTokenFromUsername(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24h
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
+
+
 }

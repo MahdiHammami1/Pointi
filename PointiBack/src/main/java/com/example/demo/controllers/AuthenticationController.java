@@ -19,7 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -28,11 +27,9 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class AuthenticationController {
     private final UserService userService;
-    private final RoleService roleService;
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
 
-    private final UserRepository userRepository ;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -40,9 +37,7 @@ public class AuthenticationController {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
         this.userService = new UserService(roleService ,userRepository );
-        this.roleService = roleService;
         this.passwordEncoder = new BCryptPasswordEncoder();
-        this.userRepository = userRepository;
     }
 
     @PostMapping("/signup")

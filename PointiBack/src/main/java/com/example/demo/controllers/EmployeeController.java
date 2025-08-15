@@ -2,7 +2,6 @@ package com.example.demo.controllers;
 
 
 import com.example.demo.entities.Employee;
-import com.example.demo.entities.User;
 import com.example.demo.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,8 +19,6 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeService;
-    @Autowired
-    private EmployeeService employeeService;
 
     @GetMapping
     public Page<Employee> getAll(@PageableDefault(page = 0, size = 5) Pageable pageable) {
@@ -57,14 +54,14 @@ public class EmployeeController {
 
     @PutMapping("/set-badge")
     public Employee setBadgeToEmployee(@RequestParam Integer employeeID, @RequestParam UUID badgeID) {
-        return employeeService.setBadgeToEmployee(employeeID, badgeID);
+        return employeService.setBadgeToEmployee(employeeID, badgeID);
     }
 
     @PutMapping("/{employeeID}/badge/{badgeID}")
     public ResponseEntity<Employee> modifyRoleOfUser(
             @PathVariable Integer employeeID,
             @PathVariable UUID badgeID) {
-        Employee updatedEmployee = employeeService.modifyRoleOfUser(employeeID, badgeID);
+        Employee updatedEmployee = employeService.modifyRoleOfUser(employeeID, badgeID);
         return ResponseEntity.ok(updatedEmployee);
     }
 

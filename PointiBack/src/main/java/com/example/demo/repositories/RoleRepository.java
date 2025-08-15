@@ -11,4 +11,7 @@ import java.util.UUID;
 public interface RoleRepository extends JpaRepository<Role, UUID> {
     @EntityGraph(attributePaths = "permissions")
     Optional<Role> findById(UUID id);
+
+
+    Role getRoleByNom(String nom);
 }
