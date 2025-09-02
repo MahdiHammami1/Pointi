@@ -1,3 +1,44 @@
+/* Stepper styles */
+.stepper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #7b2ff7;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+  box-shadow: 0 0 8px #a084f5;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.active-step .step-circle {
+  background: #2196f3;
+  box-shadow: 0 0 16px #2196f3;
+}
+.step-label {
+  font-size: 0.95rem;
+  color: #7b2ff7;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.active-step .step-label {
+  color: #2196f3;
+}
 /* Advanced responsive CSS for Security Agent component */
 
 :host {

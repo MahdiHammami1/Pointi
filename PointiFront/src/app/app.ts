@@ -10,4 +10,14 @@ import { RouterOutlet } from '@angular/router';
 })
 export class App {
   protected title = 'pointifront';
+
+  ngOnInit() {
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'logout') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/';
+      }
+    });
+  }
 }

@@ -74,7 +74,7 @@
 
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Set Role for {{ selectedUserForRole?.firstName }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -87,7 +87,7 @@
               </div>
 
               <div class="modal-footer" *ngIf="selectedUserForRole">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button (click)="assignRoleToUser(selectedUserForRole.id, selectedUserForRole.selectedRoleId); closeModal()" class="btn btn-primary" > 
                   Assigner le rôle
                 </button>

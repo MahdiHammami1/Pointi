@@ -304,6 +304,12 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
+/* Remove modal background fog (backdrop) for minimalist look */
+.modal-backdrop {
+  background: transparent !important;
+  opacity: 0 !important;
+}
+
 /* ---------- Modal Dialog ---------- */
 .modal-dialog {
   max-width: 600px;
@@ -323,131 +329,102 @@
 
 /* ---------- Modal Content ---------- */
 .modal-content {
-  background: linear-gradient(145deg, var(--purple-gradient-start), var(--purple-gradient-end));
-  color: var(--text-light);
-  border-radius: var(--border-radius);
-  border: none;
-  padding: 2rem 2.5rem;
-  box-shadow:
-    inset 0 0 12px #b59fff88,
-    0 0 40px #6a4ab8cc;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  overflow: hidden;
+  background: #fff;
+  color: #222;
+  border-radius: 16px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 16px rgba(30,60,114,0.10);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  max-width: 420px;
+  margin: 2rem auto;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   position: relative;
-}
-
-/* Soft glowing border animation */
-@keyframes glow {
-  0%, 100% {
-    box-shadow:
-      0 0 12px #b59fff88,
-      0 0 40px #6a4ab8cc;
-  }
-  50% {
-    box-shadow:
-      0 0 24px #d1b2ffbb,
-      0 0 60px #9272d8ee;
-  }
-}
-
-.modal-content {
-  animation: glow 6s ease-in-out infinite;
 }
 
 /* ---------- Modal Header ---------- */
 .modal-header {
-  border-bottom: 2px solid #a48be7;
-  padding-bottom: 1rem;
+  background: none;
+  color: #1976d2;
+  padding: 1.2rem 1.2rem 0.7rem 1.2rem;
+  border-radius: 16px 16px 0 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  box-shadow: none;
+  border-bottom: 1px solid #e0e0e0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(58, 45, 102, 0.75);
-  border-radius: var(--border-radius) var(--border-radius) 0 0;
-  box-shadow: inset 0 -3px 5px #503fadaa;
 }
 
 /* Title style */
 .modal-title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  text-shadow: 0 0 8px #ab9eff;
-  color: var(--text-light);
-  letter-spacing: 1.1px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1976d2;
+  letter-spacing: 0.5px;
   user-select: none;
+  text-shadow: none;
 }
 
 /* Close button */
 .modal-header .close {
   background: none;
   border: none;
-  font-size: 2rem;
-  color: var(--text-light);
+  font-size: 1.5rem;
+  color: #1976d2;
   cursor: pointer;
   padding: 0 0.3rem;
-  transition: color var(--transition-speed);
+  transition: color 0.2s;
   user-select: none;
   position: relative;
-  top: -3px;
+  top: 0;
+  outline: none;
 }
-
+.modal-header .close:focus {
+  outline: 2px solid #1976d2;
+}
 .modal-header .close:hover {
-  color: #f8f4ff;
-  text-shadow: 0 0 6px #dab9ff;
+  color: #1565c0;
 }
 
 /* ---------- Modal Body ---------- */
 .modal-body {
-  margin: 1.25rem 0 1.5rem 0;
-  font-size: 1.125rem;
-  line-height: 1.6;
-  color: var(--text-light);
-  text-align: center;
-  user-select: text;
-  position: relative;
+  margin: 1.2rem 0 1.2rem 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  background: none;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
 }
 
-/* Dropdown styles */
+/* Input fields */
+.modal-body input,
+.modal-body textarea,
 .modal-body select.form-select {
-  background: linear-gradient(135deg, #7a5de0cc, #4d2c99cc);
-  border: 2.5px solid #b5a8f7cc;
-  color: var(--text-light);
-  padding: 0.75rem 1rem;
-  border-radius: var(--border-radius);
-  font-size: 1.125rem;
-  font-weight: 600;
-  box-shadow:
-    inset 0 2px 8px #d4c6ffcc,
-    0 0 10px #6f5de7bb;
-  width: 100%;
-  transition:
-    border-color var(--transition-speed),
-    box-shadow var(--transition-speed);
-  cursor: pointer;
-  appearance: none;
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--text-light) 50%),
-    linear-gradient(135deg, var(--text-light) 50%, transparent 50%);
-  background-position:
-    calc(100% - 20px) calc(1em + 2px),
-    calc(100% - 15px) calc(1em + 2px);
-  background-size: 5px 5px;
-  background-repeat: no-repeat;
-  user-select: none;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  color: #222;
+  margin-bottom: 0.5rem;
+  box-shadow: none;
 }
 
-.modal-body select.form-select:hover {
-  border-color: #d8cbff;
-  box-shadow:
-    inset 0 2px 12px #e7dbffdd,
-    0 0 14px #a492f9cc;
-}
-
+.modal-body input:focus,
+.modal-body textarea:focus,
 .modal-body select.form-select:focus {
+  border-color: #1976d2;
   outline: none;
-  border-color: #9a84ff;
-  box-shadow:
-    0 0 14px #c6b1ffaa,
-    inset 0 0 8px #c8bfffcc;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 1.2rem 0;
 }
 
 /* ---------- Modal Footer ---------- */
@@ -455,57 +432,39 @@
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  background-color: rgba(58, 45, 102, 0.75);
-  border-top: 2px solid #a48be7;
-  border-radius: 0 0 var(--border-radius) var(--border-radius);
-  padding: 1rem 2rem;
-  box-shadow: inset 0 3px 5px #503fadaa;
+  padding: 0.5rem 0 0 0;
+  background: none;
+  border-top: none;
 }
 
 /* Buttons in footer */
 .modal-footer button {
-  min-width: 120px;
-  padding: 0.5rem 1.25rem;
-  border-radius: var(--border-radius);
+  border-radius: 12px;
   border: none;
-  font-weight: 700;
+  padding: 0.7rem 2rem;
   font-size: 1rem;
-  cursor: pointer;
-  user-select: none;
-  transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
-  box-shadow:
-    0 0 5px #6a4ab8bb;
-  color: var(--text-light);
+  box-shadow: none;
 }
 
 /* Close button */
 .modal-footer .btn-secondary {
-  background-color: #4b3b85;
-  box-shadow:
-    0 0 8px #80799aaa;
-  transition: background-color 0.25s ease-in-out;
+  background: #fff;
+  color: #222;
+  border: 1px solid #e0e0e0;
 }
 
 .modal-footer .btn-secondary:hover {
-  background-color: #5a4a99;
-  box-shadow:
-    0 0 14px #4b3b85cc;
+  background: #f5f7fa;
 }
 
 /* Assign button */
 .modal-footer .btn-primary {
-  background: linear-gradient(45deg, #b594ff, #6a4ab8);
-  box-shadow:
-    0 0 20px #bb95ffcc;
-  color: var(--text-light);
-  text-shadow: 0 0 4px #dfceff;
-  transition: background 0.3s ease-in-out;
+  background: #1976d2;
+  color: #fff;
 }
 
 .modal-footer .btn-primary:hover {
-  background: linear-gradient(45deg, #2563eb, #7b5ce6);
-  box-shadow:
-    0 0 26px #cdb3ffdd;
+  background: #1565c0;
 }
 
 /* ---------- Accessibility & UX ---------- */

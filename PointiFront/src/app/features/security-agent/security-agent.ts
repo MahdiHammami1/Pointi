@@ -22,6 +22,29 @@ import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
   styleUrl: './security-agent.css'
 })
 export class SecurityAgentComponent {
+  allEmployees: any[] = [];
+  ngOnInit() {
+    this.chargerTousLesEmployes();
+  }
+
+  chargerTousLesEmployes() {
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + (localStorage.getItem("token") || '')
+    });
+    this.http.get<any>('http://localhost:8080/employees', { headers })
+      .subscribe({
+        next: (data) => {
+          this.allEmployees = data.content || [];
+        },
+        error: () => {
+          this.allEmployees = [];
+        }
+      });
+  }
+  employesAffectables: any[] = [];
+  selectedEmployeId: number | null = null;
+  commentaireAffectation: string = '';
+  showFilterError = false;
   currentStep: 1 | 2 | 3 = 1;
 
   filters = {
@@ -78,6 +101,7 @@ export class SecurityAgentComponent {
     if (confirmed) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      localStorage.setItem('logout', Date.now().toString());
       window.location.href = '/';
     }
   }
@@ -86,6 +110,47 @@ export class SecurityAgentComponent {
 
   goToStep(step: 1 | 2 | 3) {
     this.currentStep = step;
+    if (step === 2 && this.selectedVisiteur) {
+      this.chargerEmployesAffectables();
+    }
+  }
+  chargerEmployesAffectables() {
+    // Appel à l'API backend pour récupérer les employés à qui on peut affecter le visiteur
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + (localStorage.getItem("token") || '')
+    });
+    // Remplacer l'URL par celle qui retourne la liste filtrée côté backend
+    this.http.get<any[]>(`http://localhost:8080/visitor-employee/affectables?idVisiteur=${this.selectedVisiteur.id}`, { headers })
+      .subscribe({
+        next: (data) => {
+          this.employesAffectables = data;
+        },
+        error: (err) => {
+          this.employesAffectables = [];
+        }
+      });
+  }
+  affecterVisiteur() {
+    if (!this.selectedVisiteur || !this.selectedEmployeId) return;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + (localStorage.getItem("token") || '')
+    });
+    const dto = {
+      idVisiteur: this.selectedVisiteur.id,
+      idEmploye: this.selectedEmployeId,
+      dateAffectation: new Date().toISOString(),
+      commentaire: this.commentaireAffectation
+    };
+    this.http.post('http://localhost:8080/visitor-employee/affecter', dto, { headers }).subscribe({
+      next: () => {
+        alert('Affectation réussie !');
+        this.goToStep(1);
+      },
+      error: () => {
+        alert('Erreur lors de l\'affectation');
+      }
+    });
   }
 
   submit() {
@@ -113,26 +178,45 @@ export class SecurityAgentComponent {
   }
 }
 
- applyFilter(): void {
+  onFilterSubmit(): void {
+    this.showFilterError = true;
+    // Validation du champ CIN uniquement au clic
+    if (!this.filters.cin || this.filters.cin.length !== 3 || !/^[0-9]{3}$/.test(this.filters.cin)) {
+      this.visiteurs = [];
+      return;
+    }
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + localStorage.getItem('token') // adapte selon ton projet
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     });
-
-    let params = new HttpParams();
-    if (this.filters.cin) params = params.set('cin', this.filters.cin);
-    if (this.filters.nomPrenom) params = params.set('nomPrenom', this.filters.nomPrenom);
-    if (this.filters.organisation) params = params.set('organisation', this.filters.organisation);
-
-    this.http.get<any[]>('http://localhost:8080/visiteurs', { headers, params })
+    this.http.get<any[]>('http://localhost:8080/visiteurs', { headers })
       .subscribe({
         next: data => {
-          this.visiteurs = data;
+          this.visiteurs = data.filter(v => {
+            let match = true;
+            if (this.filters.cin) {
+              const cinStr = v.cin ? v.cin.toString() : '';
+              match = match && cinStr.slice(-3) === this.filters.cin;
+            }
+            if (this.filters.nomPrenom) {
+              match = match && v.nomPrenom && v.nomPrenom.toLowerCase().includes(this.filters.nomPrenom.toLowerCase());
+            }
+            if (this.filters.organisation) {
+              match = match && v.organisation && v.organisation.toLowerCase().includes(this.filters.organisation.toLowerCase());
+            }
+            return match;
+          });
         },
         error: err => {
           console.error('Erreur lors du chargement des visiteurs :', err);
         }
       });
+  }
+
+  onFilterReset(): void {
+    this.filters = { cin: '', nomPrenom: '', organisation: '' };
+    this.visiteurs = [];
+    this.showFilterError = false;
   }
 
 

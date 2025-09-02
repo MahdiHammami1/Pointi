@@ -1,63 +1,111 @@
-
-<!-- ÉTAPE 1 : Recherche visiteur -->
-<div *ngIf="currentStep === 1">
-  <div class="filter-form">
-    <h2>🔎 Filtrer les visiteurs</h2>
-    <form (ngSubmit)="applyFilter()">
-      <label>3 derniers chiffres du CIN :</label>
-      <input type="text" [(ngModel)]="filters.cin" name="cin" maxlength="3" pattern="[0-9]*" />
-
-      <label>Nom/Prénom :</label>
-      <input type="text" [(ngModel)]="filters.nomPrenom" name="nomPrenom" />
-
-      <label>Organisation :</label>
-      <input type="text" [(ngModel)]="filters.organisation" name="organisation" />
-
-      <button type="submit">Rechercher</button>
-    </form>
+<!-- Stepper Navigation -->
+<div class="container" style="margin-top:2rem;">
+  <div class="stepper" style="display:flex;justify-content:center;align-items:center;gap:2rem;margin-bottom:2rem;">
+    <div [class.active-step]="currentStep===1" class="step-item">
+      <span class="step-circle">1</span>
+      <span class="step-label">Recherche</span>
+    </div>
+    <div [class.active-step]="currentStep===2" class="step-item">
+      <span class="step-circle">2</span>
+      <span class="step-label">Affectation</span>
+    </div>
+    <div [class.active-step]="currentStep===3" class="step-item">
+      <span class="step-circle">3</span>
+      <span class="step-label">Création</span>
+    </div>
   </div>
+</div>
 
-  <div class="results" *ngIf="visiteurs.length > 0">
-    <h3>Résultats :</h3>
-    <ul>
-      <li *ngFor="let v of visiteurs">
-        <strong>{{ v.nomPrenom }}</strong> - CIN : {{ v.cin }} - Org : {{ v.organisation }}
-        <button (click)="selectedVisiteur = v; goToStep(2)">Affecter à un employé</button>
-      </li>
-    </ul>
-  </div>
+<!-- Stepper Content -->
+<div class="container">
+  <ng-container [ngSwitch]="currentStep">
+    <!-- Step 1: Recherche -->
+    <div *ngSwitchCase="1">
+      <div class="filter-form">
+        <h2>🔎 Filtrer les visiteurs</h2>
+        <form (ngSubmit)="onFilterSubmit()" #filterForm="ngForm" novalidate>
+          <label>3 derniers chiffres du CIN :</label>
+          <input type="text" [(ngModel)]="filters.cin" name="cin" maxlength="3" pattern="[0-9]{3}" required #cinInput="ngModel"
+            [ngClass]="{'input-error': showFilterError && cinInput.invalid, 'input-valid': showFilterError && cinInput.valid}" />
 
-  <div *ngIf="visiteurs.length === 0">
-    Aucun visiteur trouvé.
-    <button (click)="goToStep(3)">Créer un nouveau visiteur</button>
-  </div>
-</div >
-<!-- Bouton logout en haut à droite -->
-<div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+          <label>Nom/Prénom :</label>
+          <input type="text" [(ngModel)]="filters.nomPrenom" name="nomPrenom" />
+
+          <label>Organisation :</label>
+          <input type="text" [(ngModel)]="filters.organisation" name="organisation" />
+
+          <div style="display:flex;gap:1rem;justify-content:center;">
+            <button type="submit" [disabled]="!filters.cin || !filters.nomPrenom || !filters.organisation">Rechercher</button>
+            <button type="button" (click)="onFilterReset()">Réinitialiser</button>
+          </div>
+        </form>
+        <div style="display:flex;justify-content:center;margin-top:1rem;" *ngIf="!filters.cin && !filters.nomPrenom && !filters.organisation">
+          <button class="btn btn-success" (click)="goToStep(3)">Créer un nouveau visiteur</button>
+        </div>
+      </div>
+      <div class="results" *ngIf="visiteurs.length > 0">
+        <h3>Résultats :</h3>
+        <ul>
+          <li *ngFor="let v of visiteurs">
+            <strong>{{ v.nomPrenom }}</strong> - CIN : {{ v.cin }} - Org : {{ v.organisation }}
+            <button (click)="selectedVisiteur = v; goToStep(2)">Affecter à un employé</button>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="visiteurs.length === 0 && (filters.cin || filters.nomPrenom || filters.organisation)">
+        <span style="color:#dc2626;font-size:1rem;">Aucun visiteur trouvé pour ce filtre.</span>
+        <button (click)="goToStep(3)">Créer un nouveau visiteur</button>
+      </div>
+    </div>
+    
+    <!-- Step 2: Affectation -->
+    <div *ngSwitchCase="2">
+      <div *ngIf="selectedVisiteur" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;min-height:350px;">
+        <p style="text-align:center;"><strong>Visiteur :</strong> {{ selectedVisiteur.nomPrenom }} (CIN : {{ selectedVisiteur.cin }})</p>
+        <div *ngIf="allEmployees && allEmployees.length > 0" style="width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;gap:1rem;">
+          <label for="employeSelect" style="align-self:flex-start;">Choisir un employé à affecter :</label>
+          <select id="employeSelect" [(ngModel)]="selectedEmployeId" name="employeSelect" style="width:100%;padding:0.5rem;">
+            <option *ngFor="let emp of allEmployees" [value]="emp.id">{{ emp.nomPrenom }}</option>
+          </select>
+          <textarea [(ngModel)]="commentaireAffectation" name="commentaireAffectation" placeholder="Commentaire (optionnel)" style="width:100%;min-height:60px;padding:0.5rem;"></textarea>
+          <button class="btn btn-primary" (click)="affecterVisiteur()" [disabled]="!selectedEmployeId" style="width:100%;">Affecter</button>
+        </div>
+        <div *ngIf="allEmployees && allEmployees.length === 0">
+          <span style="color:#dc2626;">Aucun employé disponible pour l'affectation.</span>
+        </div>
+        <div style="display:flex;gap:1rem;justify-content:center;margin-top:1rem;">
+          <button class="btn btn-secondary" (click)="goToStep(1)">Retour à la recherche</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Step 3: Création -->
+    <div *ngSwitchCase="3">
+      <div style="max-width:400px;margin:2rem auto;padding:2rem 1.5rem;background:#fff;border-radius:8px;border:1.5px solid #2196f3;box-shadow:none;">
+        <div style="font-size:1.2rem;font-weight:600;margin-bottom:1.5rem;text-align:center;color:#1976d2;">Ajout d’un visiteur</div>
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <formly-form [form]="form" [fields]="fields" [model]="model"></formly-form>
+          <div style="display:flex;gap:1rem;justify-content:center;margin-top:1.5rem;">
+            <button type="submit" class="btn btn-primary" [disabled]="form.invalid" style="background:#2196f3;color:#fff;border:none;padding:0.5rem 1.5rem;border-radius:4px;box-shadow:none;">Ajouter</button>
+            <button type="button" class="btn btn-secondary" (click)="goToStep(1)" style="background:#e0e0e0;color:#222;border:none;padding:0.5rem 1.5rem;border-radius:4px;box-shadow:none;">Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<!-- Header avec bouton logout à droite -->
+<div class="header-bar" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem 0 2rem;">
+  <div class="header-title" style="font-size:1.5rem;font-weight:600;color:#7b2ff7;">Pointi - Agent de sécurité</div>
   <button class="btn btn-danger" (click)="logout()">Logout</button>
 </div>
 
-
-<!-- ÉTAPE 2 : Affectation du visiteur à un employé -->
-<div *ngIf="currentStep === 2">
-  <h2>Affecter le visiteur à un employé</h2>
-  <div *ngIf="selectedVisiteur">
-    <p><strong>Visiteur :</strong> {{ selectedVisiteur.nomPrenom }} (CIN : {{ selectedVisiteur.cin }})</p>
-    <!-- TODO: Ajouter ici le formulaire ou la logique d'affectation à un employé -->
-    <button (click)="goToStep(1)">Retour à la recherche</button>
-  </div>
-</div>
-
-<!-- ÉTAPE 3 : Création du visiteur -->
-<div *ngIf="currentStep === 3">
-  <div class="container mt-4 visitor-form-container">
-    <div class="header-gradient">Ajout d’un visiteur</div>
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      <formly-form [form]="form" [fields]="fields" [model]="model"></formly-form>
-      <button type="submit" class="btn btn-primary mt-3" [disabled]="form.invalid">
-        Ajouter
-      </button>
-      <button type="button" class="btn btn-secondary mt-3" (click)="goToStep(1)">Annuler</button>
-    </form>
-  </div>
-</div>
+<!-- Stepper CSS (à ajouter dans security-agent.css) :
+.stepper { gap:2rem; margin-bottom:2rem; }
+.step-item { display:flex; flex-direction:column; align-items:center; }
+.step-circle { width:36px; height:36px; border-radius:50%; background:#7b2ff7; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.2rem; margin-bottom:0.3rem; box-shadow:0 0 8px #a084f5; }
+.active-step .step-circle { background:#2196f3; box-shadow:0 0 16px #2196f3; }
+.step-label { font-size:0.95rem; color:#7b2ff7; font-weight:600; }
+.active-step .step-label { color:#2196f3; }
+-->

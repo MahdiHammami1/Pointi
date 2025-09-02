@@ -18,89 +18,22 @@
                         <div class="stat-icon green">👥</div>
                     </div>
                     <div class="stat-value" id="presentEmployees">{{ employeesCount }}</div>
-                    
                 </div>
-
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-title">Badges Actifs</span>
                         <div class="stat-icon blue">🏷️</div>
                     </div>
                     <div class="stat-value" id="activeBadges">{{ activeBadgesCount }}</div>
-                    
                 </div>
-
-               
-
-
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-title">Heures Supplémentaires</span>
                         <div class="stat-icon purple">⚡</div>
                     </div>
-                    <div class="stat-value" id="overtime">24h</div>
+                    <div class="stat-value" id="overtime">{{ overtimeHours }}</div>
                     <div class="stat-change positive">
-                        ↗️ +12h cette semaine
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts Section -->
-            <div class="chart-section">
-                <div class="chart-card">
-                    <h3 class="chart-title">Heures de Pointe - Aujourd'hui</h3>
-                    <div class="peak-hours-chart" id="peakHoursChart">
-                        <div class="hour-bar" style="height: 30%;" data-hour="8h" data-count="45"></div>
-                        <div class="hour-bar" style="height: 85%;" data-hour="9h" data-count="128"></div>
-                        <div class="hour-bar" style="height: 95%;" data-hour="10h" data-count="142"></div>
-                        <div class="hour-bar" style="height: 90%;" data-hour="11h" data-count="135"></div>
-                        <div class="hour-bar" style="height: 75%;" data-hour="12h" data-count="112"></div>
-                        <div class="hour-bar" style="height: 60%;" data-hour="13h" data-count="89"></div>
-                        <div class="hour-bar" style="height: 88%;" data-hour="14h" data-count="132"></div>
-                        <div class="hour-bar" style="height: 92%;" data-hour="15h" data-count="138"></div>
-                        <div class="hour-bar" style="height: 70%;" data-hour="16h" data-count="105"></div>
-                        <div class="hour-bar" style="height: 45%;" data-hour="17h" data-count="68"></div>
-                    </div>
-                </div>
-
-                <div class="chart-card">
-                    <h3 class="chart-title">Activité Récente</h3>
-                    <div class="recent-activity">
-                        <div class="activity-item">
-                            <div class="activity-status in"></div>
-                            <div class="activity-content">
-                                <div class="activity-text">Marie Dubois - Arrivée</div>
-                                <div class="activity-time">Il y a 2 minutes</div>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-status break"></div>
-                            <div class="activity-content">
-                                <div class="activity-text">Jean Martin - Pause déjeuner</div>
-                                <div class="activity-time">Il y a 5 minutes</div>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-status out"></div>
-                            <div class="activity-content">
-                                <div class="activity-text">Sophie Laurent - Départ</div>
-                                <div class="activity-time">Il y a 8 minutes</div>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-status in"></div>
-                            <div class="activity-content">
-                                <div class="activity-text">Pierre Moreau - Retour de pause</div>
-                                <div class="activity-time">Il y a 12 minutes</div>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-status in"></div>
-                            <div class="activity-content">
-                                <div class="activity-text">Anna Silva - Arrivée (Retard)</div>
-                                <div class="activity-time">Il y a 15 minutes</div>
-                            </div>
-                        </div>
+                        ↗️ +{{ overtimeChange }} cette semaine
                     </div>
                 </div>
             </div>
@@ -109,52 +42,16 @@
             <div class="team-section">
                 <div class="team-card">
                     <h3 class="chart-title">Employés par Statut</h3>
-                    <div class="employee-item">
+                    <div class="employee-item" *ngFor="let emp of teamEmployees">
                         <div class="employee-info">
-                            <div class="employee-avatar">MD</div>
+                            <div class="employee-avatar">{{ emp.initials }}</div>
                             <div class="employee-details">
-                                <h4>Marie Dubois</h4>
-                                <p>Développeuse Senior</p>
+                                <h4>{{ emp.name }}</h4>
+                                <p>{{ emp.role }}</p>
                             </div>
                         </div>
                         <div class="employee-status">
-                            <span class="status-badge present">Présente</span>
-                        </div>
-                    </div>
-                    <div class="employee-item">
-                        <div class="employee-info">
-                            <div class="employee-avatar">JM</div>
-                            <div class="employee-details">
-                                <h4>Jean Martin</h4>
-                                <p>Chef de Projet</p>
-                            </div>
-                        </div>
-                        <div class="employee-status">
-                            <span class="status-badge break">En Pause</span>
-                        </div>
-                    </div>
-                    <div class="employee-item">
-                        <div class="employee-info">
-                            <div class="employee-avatar">SL</div>
-                            <div class="employee-details">
-                                <h4>Sophie Laurent</h4>
-                                <p>Designer UX</p>
-                            </div>
-                        </div>
-                        <div class="employee-status">
-                            <span class="status-badge absent">Absente</span>
-                        </div>
-                    </div>
-                    <div class="employee-item">
-                        <div class="employee-info">
-                            <div class="employee-avatar">PM</div>
-                            <div class="employee-details">
-                                <h4>Pierre Moreau</h4>
-                                <p>Analyste</p>
-                            </div>
-                        </div>
-                        <div class="employee-status">
-                            <span class="status-badge present">Présent</span>
+                            <span class="status-badge present">{{ emp.status }}</span>
                         </div>
                     </div>
                 </div>
@@ -242,18 +139,6 @@
                         card.style.opacity = '1';
                         card.style.transform = 'translateY(0)';
                     }, index * 100);
-                });
-
-                // Animate peak hours bars
-                const hourBars = document.querySelectorAll('.hour-bar');
-                hourBars.forEach((bar, index) => {
-                    const originalHeight = bar.style.height;
-                    bar.style.height = '0%';
-                    
-                    setTimeout(() => {
-                        bar.style.transition = 'height 0.8s ease';
-                        bar.style.height = originalHeight;
-                    }, 1000 + index * 100);
                 });
             }
 
